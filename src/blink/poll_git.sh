@@ -10,7 +10,7 @@ init() {
 
 run() {
   echo "Starting $PROGRAM Process "
-  nohup python3 $PROGRAM >> logs/nohup.out &
+  nohup python3 -O $PROGRAM >> logs/nohup.out &
 }
 
 kill() {
@@ -33,7 +33,7 @@ PROGRAM=$1
 : ${1?"Usage: $0 Must pass program to run as first argument"}
 trap kill EXIT
 init
-kill
+# kill
 run
 while true
 do

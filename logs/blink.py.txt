@@ -1,0 +1,3 @@
+2020-12-23 20:00:42 INFO     Starting blink program
+2020-12-23 20:00:42 INFO     Setting up GPIO
+2020-12-23 20:00:42 INFO     loop
