@@ -8,9 +8,12 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+.vscode/
+.idea/
 build/
 develop-eggs/
 dist/
+build/
 downloads/
 eggs/
 .eggs/
@@ -127,3 +130,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+src/blink/logs/
