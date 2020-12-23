@@ -15,7 +15,7 @@ run() {
 
 kill() {
   echo "Killing $PROGRAM process"
-  pkill -f $PROGRAM
+  pkill SIGTERM -f $PROGRAM
   ps ax | grep $PROGRAM
 }
 
