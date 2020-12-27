@@ -10,6 +10,7 @@ init() {
 
 run() {
   echo "Starting $PROGRAM Process "
+  make init
   if [[ $* == *--debug* ]];
   then
     echo "Debug is enabled (mocking GPIO)"
@@ -19,13 +20,13 @@ run() {
   fi
 }
 
-kill() {
+killApp() {
   echo "Killing $PROGRAM process"
   pkill SIGTERM -f $PROGRAM
-  sleep 5
+  sleep 10
 
   ps ax | grep $PROGRAM
-  kill $(ps aux | grep $PROGRAM | awk '{print $2}')
+#  kill $(ps aux | grep $PROGRAM | awk '{print $2}')
 }
 
 fetch() {
@@ -40,7 +41,7 @@ fetch() {
 
 PROGRAM=$1
 : ${1?"Usage: $0 Must pass program to run as first argument"}
-trap kill EXIT
+trap killApp EXIT
 init
 run $*
 while true
@@ -52,7 +53,8 @@ do
       echo "Merge via git done";
       cat logs/latest_head > logs/prev_head
 
-      kill
+      killApp
+      git pull
       run $*
   fi
   echo "Sleeping...";
