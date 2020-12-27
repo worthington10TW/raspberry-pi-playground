@@ -10,13 +10,22 @@ init() {
 
 run() {
   echo "Starting $PROGRAM Process "
-  nohup python3 -O $PROGRAM >> logs/nohup.out &
+  if [[ $* == *--debug* ]];
+  then
+    echo "Debug is enabled (mocking GPIO)"
+    nohup python3 $PROGRAM >> logs/nohup.out &
+  else
+    nohup python3 -O $PROGRAM >> logs/nohup.out &
+  fi
 }
 
 kill() {
   echo "Killing $PROGRAM process"
   pkill SIGTERM -f $PROGRAM
+  sleep 5
+
   ps ax | grep $PROGRAM
+  kill $(ps aux | grep $PROGRAM | awk '{print $2}')
 }
 
 fetch() {
@@ -33,8 +42,7 @@ PROGRAM=$1
 : ${1?"Usage: $0 Must pass program to run as first argument"}
 trap kill EXIT
 init
-# kill
-run
+run $*
 while true
 do
   echo "Fetching..."
@@ -45,7 +53,7 @@ do
       cat logs/latest_head > logs/prev_head
 
       kill
-      run
+      run $*
   fi
   echo "Sleeping...";
   sleep 3

@@ -1,3 +1,5 @@
 fileignoreconfig:
-- filename: .github/workflows/ci.yml
-  checksum: ce894c365bf58579080fc07300d38697c3b644e7187053b92c1138a1cea7225e
+- filename: logs/latest_head
+  checksum: 92051e72e834d0068d52e01bae0d47c89e77cf265d7e53d1d8e6cb5b04eccdef
+- filename: logs/prev_head
+  checksum: 60d6c3453d62141853cfb95991eb2bf12574686896106f011f9e34ecfffd76ce
