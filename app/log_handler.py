@@ -19,5 +19,6 @@ def setup_logger():
     logger.addHandler(screen_handler)
     return logger
 
+
 if __name__ == '__main__':
     pass

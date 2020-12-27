@@ -1,2 +1,3 @@
 Mock.GPIO
 pytest
+flake8

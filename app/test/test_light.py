@@ -18,5 +18,6 @@ class SetupTests(unittest.TestCase):
         light.off()
         mocked.assert_called_with(1, 0)
 
+
 if __name__ == '__main__':
     unittest.main()

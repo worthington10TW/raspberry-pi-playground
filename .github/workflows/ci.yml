@@ -12,8 +12,22 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
-    - name: test
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
       run: |
-        make test
+        python -m pip install --upgrade pip
+    - name: Test
+      run: |
+        make test        
+    - name: Install
+      run: |
         make install
+    - name: Build and publish
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        python setup.py sdist bdist_wheel
+        twine upload dist/*

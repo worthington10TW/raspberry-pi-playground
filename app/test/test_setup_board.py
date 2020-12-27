@@ -30,5 +30,6 @@ class SetupTests(unittest.TestCase):
                      mock.call(4, 0, initial=0)]
             mocked.assert_has_calls(calls)
 
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,14 +1,15 @@
 init:
 	PYTHONPATH=$PYTHONPATH:..
 	pip install -r requirements.txt
+	flake8 .
 
 .PHONY: test
 test: init
-	pytest --pyargs app -v
+	pytest --pyargs app -v 
 
 .PHONY: install
 install: init
-	pip install .
+	pip wheel .
 
 .PHONY: run
 run: init
