@@ -1,6 +1,6 @@
 init:
 	PYTHONPATH=$PYTHONPATH:..
-	pip install -r requirements.txt
+	pip3 install -r requirements.txt
 	flake8 .
 
 .PHONY: test
@@ -9,7 +9,7 @@ test: init
 
 .PHONY: install
 install: init
-	pip wheel .
+	pip3 wheel .
 
 .PHONY: run
 run: init
