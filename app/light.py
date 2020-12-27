@@ -16,7 +16,7 @@ class Light:
     def on(self):
         logging.debug(f'Light {self.pin} turning on...')
         GPIO.output(self.pin, GPIO.HIGH)
-        logging.debug(f'Light {self.pin} on a')
+        logging.debug(f'Light {self.pin} on')
 
     def off(self):
         logging.debug(f'Light {self.pin} turning off...')
