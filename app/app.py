@@ -26,27 +26,29 @@ def main():
         green = Light(pins.GREEN)
         red = Light(pins.RED)
         yellow = Light(pins.YELLOW)
-
-        with PulseWrapper(pins.BLUE):
-            while True:
+        blue = Light(pins.BLUE)
+        while True:
+            with PulseWrapper(pins.BLUE):
+                blue.on()
                 result = service.run()
                 status = result['status']
                 is_running = result['is_running']
+                blue.off()
 
-                if status == Result.PASS:
-                    green.on()
-                    red.off()
-                elif status == Result.FAIL:
-                    green.off()
-                    red.on()
-                else:
-                    green.on()
-                    red.on()
-                    yellow.on()
+            if status == Result.PASS:
+                green.on()
+                red.off()
+            elif status == Result.FAIL:
+                green.off()
+                red.on()
+            else:
+                green.on()
+                red.on()
+                yellow.on()
 
-                yellow.on() if is_running else yellow.off()
+            yellow.on() if is_running else yellow.off()
 
-                sleep(10)
+            sleep(10)
 
 
 def get_integrations():
