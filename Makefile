@@ -5,7 +5,7 @@ init:
 
 .PHONY: test
 test: init
-	python -m pytest --pyargs app -v 
+	python3 -m pytest --pyargs app -v 
 
 .PHONY: install
 install: init

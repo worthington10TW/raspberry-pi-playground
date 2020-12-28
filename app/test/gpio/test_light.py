@@ -2,10 +2,10 @@
 
 import unittest
 from unittest import mock
-from app.light import Light
+from app.gpio.light import Light
 
 
-class SetupTests(unittest.TestCase):
+class LightTests(unittest.TestCase):
     @mock.patch('Mock.GPIO.output')
     def test_turn_on(self, mocked):
         light = Light(1)

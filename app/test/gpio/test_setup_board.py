@@ -3,10 +3,10 @@
 import unittest
 from unittest import mock
 
-from app import setup_board
+from app.gpio import setup_board
 
 
-class SetupTests(unittest.TestCase):
+class BoardTests(unittest.TestCase):
     @mock.patch('Mock.GPIO.setwarnings')
     def test_warningsAreDisabled(self, mocked):
         with setup_board.SetupBoard((1, 2, 3, 4)):

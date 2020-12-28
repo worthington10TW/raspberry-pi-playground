@@ -1,3 +1,5 @@
 Mock.GPIO
 pytest
 flake8
+requests
+requests-mock

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 from log_handler import setup_logger
-import setup_board as board
-import board_constants as pins
-from light import Light
+import gpio.setup_board as board
+import gpio.board_constants as pins
+from gpio.light import Light
 from time import sleep
 import logging
 import asyncio
