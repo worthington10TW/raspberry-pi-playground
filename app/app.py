@@ -11,11 +11,11 @@ import aggregator_service as s
 import integration_mapper as m
 
 from log_handler import setup_logger
-from gpio.light import Light, LightWrapper
+from gpio.light import Light, Pulse, LightWrapper
 from time import sleep
 
 
-async def main():
+def main():
     setup_logger()
     logging.info("Hello World!")
 
@@ -25,7 +25,7 @@ async def main():
             pins.GREEN, pins.YELLOW, pins.RED, pins.BLUE)):
         green = Light(pins.GREEN)
         red = Light(pins.RED)
-        yellow = Light(pins.YELLOW)
+        yellow = Pulse(pins.YELLOW)
         blue = Light(pins.BLUE)
 
         while True:

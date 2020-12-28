@@ -6,7 +6,8 @@ else:
     from RPi import GPIO
 
 import logging
-import asyncio
+from time import sleep
+import threading
 
 
 class LightWrapper:
@@ -26,11 +27,11 @@ class PulseWrapper:
         self.pulse = Pulse(pin)
 
     def __enter__(self):
-        self.pulse.start()
+        self.pulse.on()
         return self
 
     def __exit__(self, type, value, traceback):
-        self.pulse.stop()
+        self.pulse.off()
 
 
 class Light:
@@ -54,27 +55,29 @@ class Pulse:
         self._is_pulsing = False
         self.pwm = GPIO.PWM(self.pin, 100)
         dc = 0
-        self.pwm.start(dc)
+        self.pwm.on(dc)
 
-    def start(self):
+    def on(self):
         self._is_pulsing = True
         logging.debug(f'Light {self.pin} pulsing')
-        asyncio.ensure_future(self.pulse())
+        # e = threading.Event()
+        t = threading.Thread(name='pulse', target=self.pulse)
+        t.start()
         return self
 
-    def stop(self):
+    def off(self):
         self._is_pulsing = False
         logging.debug(f'Light {self.pin} turning off')
-        self.pwm.stop()
+        self.pwm.off()
 
-    async def pulse(self):
+    def pulse(self):
         while self.is_pulsing:
             for dc in range(0, 101, 5):
                 self.pwm.ChangeDutyCycle(dc)
-                await asyncio.sleep(0.05)
+                sleep(0.05)
             for dc in range(95, 0, -5):
                 self.pwm.ChangeDutyCycle(dc)
-                await asyncio.sleep(0.05)
+                sleep(0.05)
 
     @property
     def is_pulsing(self):
