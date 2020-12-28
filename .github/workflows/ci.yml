@@ -21,6 +21,6 @@ jobs:
     - name: Test
       run: |
         make test        
-    - name: Install
-      run: |
-        make install
+#    - name: Install
+#      run: |
+#        make install
