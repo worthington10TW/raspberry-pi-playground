@@ -22,7 +22,7 @@ def main():
     service = s.AggregatorService(get_integrations())
 
     with board.SetupBoard((
-            pins.GREEN, pins.YELLOW, pins.RED)):
+            pins.GREEN, pins.YELLOW, pins.RED, pins.BLUE)):
         green = Light(pins.GREEN)
         red = Light(pins.RED)
         yellow = Light(pins.YELLOW)
