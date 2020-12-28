@@ -53,7 +53,7 @@ class Pulse:
     def __init__(self, pin):
         self.pin = pin
         self._is_pulsing = False
-        self.pwm = GPIO.PWM(self.pin, 100)
+        self.pwm = GPIO.PWM(self.pin, 0)
         dc = 0
         self.pwm.on(dc)
 
