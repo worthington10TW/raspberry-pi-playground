@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 
-from app.ci_gateway.constants import Result
+from ci_gateway import constants as c
 
 
 def get_status(result):
-    print(result)
-    if any(r['status'] == Result.FAIL for r in result):
-        return Result.FAIL
+    if any(r['status'] == c.Result.FAIL for r in result):
+        return c.Result.FAIL
 
-    elif all(r['status'] == Result.PASS for r in
-             filter(lambda x: x['status'] != Result.RUNNING, result)):
-        return Result.PASS
+    elif all(r['status'] == c.Result.PASS for r in
+             filter(lambda x: x['status'] != c.Result.RUNNING, result)):
+        return c.Result.PASS
     else:
-        return Result.UNKNOWN
+        return c.Result.UNKNOWN
 
 
 class AggregatorService(object):
@@ -28,6 +27,6 @@ class AggregatorService(object):
             type="AGGREGATED",
             start=None,
             is_running=True
-            if any(r['status'] == Result.RUNNING for r in result)
+            if any(r['status'] == c.Result.RUNNING for r in result)
             else False,
             status=get_status(result))
