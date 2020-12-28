@@ -1,11 +1,11 @@
 init:
 	PYTHONPATH=$PYTHONPATH:..
-	pip3 install -r requirements.txt
+	pip3 install -r requirements.txt --user
 	flake8 .
 
 .PHONY: test
 test: init
-	pytest --pyargs app -v 
+	python -m pytest --pyargs app -v 
 
 .PHONY: install
 install: init
@@ -13,4 +13,4 @@ install: init
 
 .PHONY: run
 run: init
-	python app/app.py
+	python3 app/app.py
