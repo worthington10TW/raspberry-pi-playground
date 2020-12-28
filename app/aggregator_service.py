@@ -4,11 +4,12 @@ from ci_gateway import constants as c
 
 
 def get_status(result):
-    if any(r['status'] == c.Result.FAIL for r in result):
+    if len(result) == 0:
+        return c.Result.UNKNOWN
+    elif any(r['status'] == c.Result.FAIL for r in result):
         return c.Result.FAIL
 
-    elif all(r['status'] == c.Result.PASS for r in
-             filter(lambda x: x['status'] != c.Result.RUNNING, result)):
+    elif all(r['status'] == c.Result.PASS for r in result):
         return c.Result.PASS
     else:
         return c.Result.UNKNOWN
@@ -29,4 +30,7 @@ class AggregatorService(object):
             is_running=True
             if any(r['status'] == c.Result.RUNNING for r in result)
             else False,
-            status=get_status(result))
+            status=get_status(
+                list(
+                    filter(
+                        lambda x: x['status'] != c.Result.RUNNING, result))))

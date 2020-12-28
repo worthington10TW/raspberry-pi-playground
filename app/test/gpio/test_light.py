@@ -25,10 +25,6 @@ class LightTests(unittest.TestCase):
         pulse.start()
         self.assertEqual(True, pulse.is_pulsing)
         mocked.assert_called_once_with(1, 100)
-        # with PulseWrapper(1) as light:
-        #     self.assertEqual(True, light.is_pulsing)
-        #     mocked.return_value.stop.assert_not_called()
-
         pulse.stop()
         self.assertEqual(False, pulse.is_pulsing)
         assert mocked.return_value.stop.called

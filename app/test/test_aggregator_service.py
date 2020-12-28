@@ -1,7 +1,6 @@
 # #!/usr/bin/env python3
 #
 # import unittest
-# import pytest
 #
 # from app.ci_gateway import constants as r
 # from app import aggregator_service as s
@@ -54,6 +53,13 @@
 #         ]
 #         result = s.AggregatorService(actions).run()
 #         self.assertEqual(r.Result.PASS, result["status"])
+#
+#     def test_no_results(self):
+#         actions = [
+#             {"action": return_running}
+#         ]
+#         result = s.AggregatorService(actions).run()
+#         self.assertEqual(r.Result.UNKNOWN, result["status"])
 #
 #
 # if __name__ == '__main__':

@@ -11,7 +11,7 @@ import aggregator_service as s
 import integration_mapper as m
 
 from log_handler import setup_logger
-from gpio.light import Light, Pulse, LightWrapper
+from gpio.light import Light, LightWrapper
 from time import sleep
 
 
