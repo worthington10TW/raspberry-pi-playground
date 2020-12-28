@@ -8,6 +8,8 @@ import os
 from app.ci_gateway import github
 from app.ci_gateway import constants as c
 
+os.environ['GITHUB_TOKEN'] = 'secret'
+
 
 class GithubTests(unittest.TestCase):
     def test_map_result(self):

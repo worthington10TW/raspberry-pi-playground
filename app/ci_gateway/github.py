@@ -1,5 +1,6 @@
 import requests
 import sys
+import os
 from .constants import Integration, Result
 
 
@@ -7,11 +8,15 @@ class GitHubAction(object):
     def __init__(self, username, repo):
         self.username = username
         self.repo = repo
+        self.token = os.getenv('GITHUB_TOKEN')
 
     def get_latest(self):
         base = 'https://api.github.com'
         url = f'{base}/repos/{self.username}/{self.repo}/actions/runs'
-        resp = requests.get(url)
+
+        resp = requests.get(
+            url,
+            headers={'Authorization': f'token {self.token}'})
         if resp.status_code != 200:
             raise APIError('GET', url, resp.status_code)
 
