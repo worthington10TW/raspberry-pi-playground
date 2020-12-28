@@ -8,6 +8,7 @@ class Result(Enum):
     FAIL = "FAIL"
     RUNNING = "RUNNING"
     UNKNOWN = "UNKNOWN"
+    NONE = "NONE"
 
 
 class Integration(Enum):

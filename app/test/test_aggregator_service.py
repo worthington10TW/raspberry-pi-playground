@@ -59,7 +59,7 @@
 #             {"action": return_running}
 #         ]
 #         result = s.AggregatorService(actions).run()
-#         self.assertEqual(r.Result.UNKNOWN, result["status"])
+#         self.assertEqual(r.Result.NONE, result["status"])
 #
 #
 # if __name__ == '__main__':

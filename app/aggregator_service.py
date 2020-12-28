@@ -5,7 +5,7 @@ from ci_gateway import constants as c
 
 def get_status(result):
     if len(result) == 0:
-        return c.Result.UNKNOWN
+        return c.Result.NONE
     elif any(r['status'] == c.Result.FAIL for r in result):
         return c.Result.FAIL
 
