@@ -1,7 +1,23 @@
 #!/usr/bin/env python3
 
-from app.ci_gateway import constants as c
-from app.ci_gateway import github
+from ci_gateway import constants as c
+from ci_gateway import github
+
+
+class IntegrationMapper(object):
+    def __init__(self, integrations):
+        self.integrations = integrations
+        self.__validate_integrations()
+
+    def __validate_integrations(self):
+        valid_integrations = set(item.value for item in c.Integration)
+
+        for i in self.integrations:
+            if i['type'] not in valid_integrations:
+                raise MismatchError(i['type'])
+
+    def get(self):
+        return list(map(_map, self.integrations))
 
 
 def _map_git(username, repo):
@@ -18,23 +34,6 @@ def _map(integration):
         'type': c.Integration[integration['type']],
         'action': action.get(c.Integration[integration['type']])
     }
-
-
-class IntegrationMapper(object):
-    def __init__(self, integrations, pin):
-        self.integrations = integrations
-        self.pin = pin
-        self.__validate_integrations()
-
-    def __validate_integrations(self):
-        valid_integrations = set(item.value for item in c.Integration)
-
-        for i in self.integrations:
-            if i['type'] not in valid_integrations:
-                raise MismatchError(i['type'])
-
-    def get(self):
-        return list(map(_map, self.integrations))
 
 
 class MismatchError(Exception):

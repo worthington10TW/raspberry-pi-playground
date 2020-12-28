@@ -1,6 +1,6 @@
 import requests
 import sys
-from app.ci_gateway import constants as c
+from .constants import Integration, Result
 
 
 class GitHubAction(object):
@@ -24,13 +24,13 @@ class GitHubAction(object):
         conclusion = latest["conclusion"]
         status = latest["status"]
         return dict(
-            type=c.Integration.GITHUB,
+            type=Integration.GITHUB,
             id=latest["id"],
             start=latest["created_at"],
-            status=c.Result.FAIL if status == "completed" and conclusion == "failure" else  # noqa: E501
-            c.Result.PASS if status == "completed" and conclusion == "success" else  # noqa: E501
-            c.Result.RUNNING if conclusion is None and (status == "queued" or status == "in_progress") else  # noqa: E501
-            c.Result.UNKNOWN)
+            status=Result.FAIL if status == "completed" and conclusion == "failure" else  # noqa: E501
+            Result.PASS if status == "completed" and conclusion == "success" else  # noqa: E501
+            Result.RUNNING if conclusion is None and (status == "queued" or status == "in_progress") else  # noqa: E501
+            Result.UNKNOWN)
 
 
 class APIError(Exception):
