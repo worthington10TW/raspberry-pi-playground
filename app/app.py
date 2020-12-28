@@ -15,7 +15,7 @@ from gpio.light import Light, Pulse, LightWrapper
 from time import sleep
 
 
-def main():
+async def main():
     setup_logger()
     logging.info("Hello World!")
 
@@ -33,7 +33,7 @@ def main():
                 blue.on()
                 result = service.run()
                 status = result['status']
-                # is_running = result['is_running']
+                is_running = result['is_running']
                 blue.off()
 
             if status == Result.PASS:
@@ -46,8 +46,7 @@ def main():
                 green.on()
                 red.on()
 
-            yellow.start()
-            # yellow.start() if is_running else yellow.stop()
+            yellow.start() if is_running else yellow.stop()
 
             sleep(10)
 
