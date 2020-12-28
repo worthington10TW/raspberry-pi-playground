@@ -7,6 +7,7 @@ else:
 
 import logging
 import asyncio
+from time import sleep
 
 
 class LightWrapper:
@@ -53,12 +54,23 @@ class Pulse:
         self.pin = pin
         self._is_pulsing = False
         self.pwm = GPIO.PWM(self.pin, 100)
-
-    def start(self):
-        logging.debug(f'Light {self.pin} pulsing')
         dc = 0
         self.pwm.start(dc)
+
+    def start(self):
         self._is_pulsing = True
+        logging.debug(f'Light {self.pin} pulsing')
+
+        while self._is_pulsing
+            for dc in range(0, 101, 5):
+                self.pwm.ChangeDutyCycle(dc)
+                sleep(0.05)
+                print(dc)
+            for dc in range(95, 0, -5):
+                self.pwm.ChangeDutyCycle(dc)
+                sleep(0.05)
+                print(dc)
+
         asyncio.ensure_future(self.__pulse())
         return self
 

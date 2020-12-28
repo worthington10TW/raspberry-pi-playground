@@ -27,12 +27,13 @@ def main():
         red = Light(pins.RED)
         yellow = Pulse(pins.YELLOW)
         blue = Light(pins.BLUE)
+
         while True:
             with LightWrapper(pins.BLUE):
                 blue.on()
                 result = service.run()
                 status = result['status']
-                is_running = result['is_running']
+                # is_running = result['is_running']
                 blue.off()
 
             if status == Result.PASS:
@@ -45,7 +46,8 @@ def main():
                 green.on()
                 red.on()
 
-            yellow.start() if is_running else yellow.stop()
+            yellow.start()
+            # yellow.start() if is_running else yellow.stop()
 
             sleep(10)
 
