@@ -55,20 +55,23 @@ class Pulse:
         self._is_pulsing = False
         self.pwm = GPIO.PWM(self.pin, 100)
         dc = 0
-        self.pwm.on(dc)
+        self.pwm.start(dc)
 
     def on(self):
         self._is_pulsing = True
         logging.debug(f'Light {self.pin} pulsing')
-        # e = threading.Event()
-        t = threading.Thread(name='pulse', target=self.pulse)
-        t.start()
+        self.task = threading.Thread(name='pulse', target=self.pulse)
+        self.task.start()
         return self
 
     def off(self):
         self._is_pulsing = False
         logging.debug(f'Light {self.pin} turning off')
-        self.pwm.off()
+        self.pwm.stop()
+
+    @property
+    def is_pulsing(self):
+        return self._is_pulsing
 
     def pulse(self):
         while self.is_pulsing:
@@ -79,6 +82,5 @@ class Pulse:
                 self.pwm.ChangeDutyCycle(dc)
                 sleep(0.05)
 
-    @property
-    def is_pulsing(self):
-        return self._is_pulsing
+
+
