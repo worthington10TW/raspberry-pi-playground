@@ -49,7 +49,8 @@ def main():
                 green.off()
                 red.off()
 
-            yellow.on() if is_running else yellow.off()
+            yellow.on()
+                # if is_running else yellow.off()
 
             sleep(10)
 
