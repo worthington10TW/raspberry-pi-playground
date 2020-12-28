@@ -9,20 +9,60 @@ import logging
 import asyncio
 
 
+class LightWrapper:
+    def __init__(self, pin):
+        self.light = Light(pin)
+
+    def __enter__(self):
+        self.pulse.on()
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.pulse.off()
+
+
 class PulseWrapper:
+    def __init__(self, pin):
+        self.pulse = Pulse(pin)
+
+    def __enter__(self):
+        self.pulse.start()
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.pulse.stop()
+
+
+class Light:
     def __init__(self, pin):
         self.pin = pin
 
-    def __enter__(self):
-        logging.debug(f'Light {self.pin} pulsing')
+    def on(self):
+        logging.debug(f'Light {self.pin} turning on...')
+        GPIO.output(self.pin, GPIO.HIGH)
+        logging.debug(f'Light {self.pin} on')
+
+    def off(self):
+        logging.debug(f'Light {self.pin} turning off...')
+        GPIO.output(self.pin, GPIO.LOW)
+        logging.debug(f'Light {self.pin} off')
+
+
+class Pulse:
+    def __init__(self, pin):
+        self.pin = pin
+        self._is_pulsing = False
         self.pwm = GPIO.PWM(self.pin, 100)
+
+    def start(self):
+        logging.debug(f'Light {self.pin} pulsing')
         dc = 0
         self.pwm.start(dc)
         self._is_pulsing = True
         asyncio.ensure_future(self.__pulse())
         return self
 
-    def __exit__(self, type, value, traceback):
+    def stop(self):
         self._is_pulsing = False
         logging.debug(f'Light {self.pin} turning off')
         self.pwm.stop()
@@ -39,18 +79,3 @@ class PulseWrapper:
     @property
     def is_pulsing(self):
         return self._is_pulsing
-
-
-class Light:
-    def __init__(self, pin):
-        self.pin = pin
-
-    def on(self):
-        logging.debug(f'Light {self.pin} turning on...')
-        GPIO.output(self.pin, GPIO.HIGH)
-        logging.debug(f'Light {self.pin} on')
-
-    def off(self):
-        logging.debug(f'Light {self.pin} turning off...')
-        GPIO.output(self.pin, GPIO.LOW)
-        logging.debug(f'Light {self.pin} off')

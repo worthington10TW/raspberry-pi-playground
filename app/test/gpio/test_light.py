@@ -2,7 +2,7 @@
 
 import unittest
 from unittest import mock
-from app.gpio.light import Light, PulseWrapper
+from app.gpio.light import Light, Pulse
 
 
 class LightTests(unittest.TestCase):
@@ -21,12 +21,16 @@ class LightTests(unittest.TestCase):
     @mock.patch('Mock.GPIO.PWM')
     def test_pulse_pwm_setup(self, mocked):
         mocked.return_value.stop = mock.MagicMock()
-        with PulseWrapper(1) as light:
-            self.assertEqual(True, light.is_pulsing)
-            mocked.return_value.stop.assert_not_called()
-
+        pulse = Pulse(1)
+        pulse.start()
+        self.assertEqual(True, pulse.is_pulsing)
         mocked.assert_called_once_with(1, 100)
-        self.assertEqual(False, light.is_pulsing)
+        # with PulseWrapper(1) as light:
+        #     self.assertEqual(True, light.is_pulsing)
+        #     mocked.return_value.stop.assert_not_called()
+
+        pulse.stop()
+        self.assertEqual(False, pulse.is_pulsing)
         assert mocked.return_value.stop.called
 
 

@@ -11,7 +11,7 @@ import aggregator_service as s
 import integration_mapper as m
 
 from log_handler import setup_logger
-from gpio.light import Light, PulseWrapper
+from gpio.light import Light, Pulse, LightWrapper
 from time import sleep
 
 
@@ -25,10 +25,10 @@ def main():
             pins.GREEN, pins.YELLOW, pins.RED, pins.BLUE)):
         green = Light(pins.GREEN)
         red = Light(pins.RED)
-        yellow = Light(pins.YELLOW)
+        yellow = Pulse(pins.YELLOW)
         blue = Light(pins.BLUE)
         while True:
-            with PulseWrapper(pins.BLUE):
+            with LightWrapper(pins.BLUE):
                 blue.on()
                 result = service.run()
                 status = result['status']
@@ -44,9 +44,8 @@ def main():
             else:
                 green.on()
                 red.on()
-                yellow.on()
 
-            yellow.on() if is_running else yellow.off()
+            yellow.start() if is_running else yellow.stop()
 
             sleep(10)
 
