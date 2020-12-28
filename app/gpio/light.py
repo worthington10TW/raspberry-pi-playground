@@ -60,17 +60,6 @@ class Pulse:
     def start(self):
         self._is_pulsing = True
         logging.debug(f'Light {self.pin} pulsing')
-
-        while self._is_pulsing:
-            for dc in range(0, 101, 5):
-                self.pwm.ChangeDutyCycle(dc)
-                sleep(0.05)
-                print(dc)
-            for dc in range(95, 0, -5):
-                self.pwm.ChangeDutyCycle(dc)
-                sleep(0.05)
-                print(dc)
-
         asyncio.ensure_future(self.__pulse())
         return self
 
@@ -83,10 +72,10 @@ class Pulse:
         while self.is_pulsing:
             for dc in range(0, 101, 5):
                 self.pwm.ChangeDutyCycle(dc)
-                await asyncio.sleep(0.01)
+                sleep(0.05)
             for dc in range(95, 0, -5):
                 self.pwm.ChangeDutyCycle(dc)
-                await asyncio.sleep(0.01)
+                sleep(0.05)
 
     @property
     def is_pulsing(self):
