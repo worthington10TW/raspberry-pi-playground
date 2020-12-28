@@ -61,7 +61,7 @@ class Pulse:
         self._is_pulsing = True
         logging.debug(f'Light {self.pin} pulsing')
 
-        while self._is_pulsing
+        while self._is_pulsing:
             for dc in range(0, 101, 5):
                 self.pwm.ChangeDutyCycle(dc)
                 sleep(0.05)
