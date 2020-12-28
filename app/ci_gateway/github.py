@@ -26,11 +26,9 @@ class GitHubAction(object):
             type="GITHUB",
             id=latest["id"],
             start=latest["created_at"],
-            status=
-            "FAIL" if status == "completed" and conclusion == "failure" else
+            status="FAIL" if status == "completed" and conclusion == "failure" else  # noqa: E501
             "PASS" if status == "completed" and conclusion == "success" else
-            "RUNNING" if conclusion is None and
-                         (status == "queued" or status == "in_progress") else
+            "RUNNING" if conclusion is None and (status == "queued" or status == "in_progress") else  # noqa: E501
             "UNKNOWN")
 
 

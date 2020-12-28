@@ -1,5 +1,5 @@
 fileignoreconfig:
-- filename: logs/latest_head
-  checksum: 92051e72e834d0068d52e01bae0d47c89e77cf265d7e53d1d8e6cb5b04eccdef
-- filename: logs/prev_head
-  checksum: 60d6c3453d62141853cfb95991eb2bf12574686896106f011f9e34ecfffd76ce
+- filename: app/test/ci_gateway/response.json
+  checksum: 0379fd8bfdced783f2f8111870234599232e352473d396b6e6805e7e0df434e8
+- filename: app/ci_gateway/github.py
+  checksum: f2e1932048718c1f20c180615f75cf0d9961389b6e65057e35af127c20105b70

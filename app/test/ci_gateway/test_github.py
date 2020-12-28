@@ -51,7 +51,6 @@ class GithubTests(unittest.TestCase):
         result = github.GitHubAction.map_result(json.loads(latest))
         self.assertEqual("PASS", result["status"])
 
-
     def test_failed(self):
         latest = """{
             "id": 448533827,
@@ -72,7 +71,7 @@ class GithubTests(unittest.TestCase):
         result = github.GitHubAction.map_result(json.loads(latest))
         self.assertEqual("UNKNOWN", result["status"])
 
-    def test_unknown_not_completed(self):
+    def test_unknown_completed(self):
         latest = """{
             "id": 448533827,
             "status": "something",
@@ -86,7 +85,8 @@ class GithubTests(unittest.TestCase):
     def test_gets_latest_from_git(self, m):
         with open('response.json') as json_file:
             data = json.load(json_file)
-            m.get('https://api.github.com/repos/super-man/awesome/actions/runs', json=data, status_code=200)
+            m.get('https://api.github.com/repos/super-man/awesome/actions/runs',  # noqa: E501
+                  json=data, status_code=200)
             result = github.GitHubAction('super-man', 'awesome').get_latest()
             self.assertEqual("GITHUB", result["type"])
             self.assertEqual("FAIL", result["status"])
@@ -94,9 +94,13 @@ class GithubTests(unittest.TestCase):
     @requests_mock.Mocker()
     def test_fails_when_not_200(self, m):
         with pytest.raises(github.APIError) as excinfo:
-            m.get('https://api.github.com/repos/super-man/awesome/actions/runs', json={}, status_code=400)
+            m.get('https://api.github.com/repos/super-man/awesome/actions/runs',  # noqa: E501
+                  json={}, status_code=400)
             github.GitHubAction('super-man', 'awesome').get_latest()
-        self.assertEqual("APIError: GET https://api.github.com/repos/super-man/awesome/actions/runs 400", str(excinfo.value))
+
+        msg = "APIError: GET https://api.github.com/repos/super-man/awesome/actions/runs 400"  # noqa: E501
+        self.assertEqual(msg, str(excinfo.value))
+
 
 if __name__ == '__main__':
     unittest.main()
