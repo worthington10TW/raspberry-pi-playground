@@ -31,10 +31,10 @@ class PulseWrapper:
         while self.is_pulsing:
             for dc in range(0, 101, 5):
                 self.pwm.ChangeDutyCycle(dc)
-                await asyncio.sleep(0.05)
+                await asyncio.sleep(0.01)
             for dc in range(95, 0, -5):
                 self.pwm.ChangeDutyCycle(dc)
-                await asyncio.sleep(0.05)
+                await asyncio.sleep(0.01)
 
     @property
     def is_pulsing(self):
