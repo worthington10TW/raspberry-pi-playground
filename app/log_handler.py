@@ -14,7 +14,11 @@ def setup_logger():
     screen_handler.setFormatter(formatter)
 
     logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
+    if __debug__:
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.INFO)
+
     logger.addHandler(handler)
     logger.addHandler(screen_handler)
     return logger

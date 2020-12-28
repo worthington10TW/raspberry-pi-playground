@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 
-import ci_gateway.constants as r
+from app.ci_gateway.constants import Result
+
+
+def get_status(result):
+    print(result)
+    if any(r['status'] == Result.FAIL for r in result):
+        return Result.FAIL
+
+    elif all(r['status'] == Result.PASS for r in
+             filter(lambda x: x['status'] != Result.RUNNING, result)):
+        return Result.PASS
+    else:
+        return Result.UNKNOWN
 
 
 class AggregatorService(object):
@@ -15,4 +27,7 @@ class AggregatorService(object):
         return dict(
             type="AGGREGATED",
             start=None,
-            status=r.Result.PASS)
+            is_running=True
+            if any(r['status'] == Result.RUNNING for r in result)
+            else False,
+            status=get_status(result))

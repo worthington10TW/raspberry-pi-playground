@@ -31,23 +31,20 @@ def main():
             with PulseWrapper(pins.BLUE):
                 result = service.run()
                 status = result['status']
+                is_running = result['is_running']
 
             if status == Result.PASS:
                 green.on()
                 red.off()
-                yellow.off()
             elif status == Result.FAIL:
                 green.off()
                 red.on()
-                yellow.off()
-            elif status == Result.RUNNING:
-                green.off()
-                red.off()
-                yellow.on()
             else:
                 green.on()
                 red.on()
                 yellow.on()
+
+            yellow.on() if is_running else yellow.off()
 
             sleep(10)
 
