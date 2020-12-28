@@ -81,6 +81,3 @@ class Pulse:
             for dc in range(95, 0, -5):
                 self.pwm.ChangeDutyCycle(dc)
                 sleep(0.05)
-
-
-
