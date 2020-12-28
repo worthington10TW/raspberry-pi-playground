@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 
-import app.ci_gateway.constants as r
+import ci_gateway.constants as r
 
 
 class AggregatorService(object):
     def __init__(self, integrations):
         self.integrations = integrations
 
-    def get(self):
+    def run(self):
+        result = []
+        for i in self.integrations:
+            result.append(i['action']())
+
         return dict(
             type="AGGREGATED",
             start=None,

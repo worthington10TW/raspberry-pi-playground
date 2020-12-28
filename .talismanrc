@@ -2,5 +2,6 @@ fileignoreconfig:
 - filename: app/test/ci_gateway/response.json
   checksum: 0379fd8bfdced783f2f8111870234599232e352473d396b6e6805e7e0df434e8
 - filename: app/ci_gateway/github.py
-  checksum: b4ee818f29bec2de277cdb3fe358dbc129b93a2cc8ff2be5fd06c25ff62b23a1
+  checksum: a33e9f8771bb469fc5aaffd2fdd1f3e8b55e407e5ca2452f6a04a1327a8af731
+
 

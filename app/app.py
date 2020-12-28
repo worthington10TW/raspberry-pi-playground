@@ -6,35 +6,65 @@ import json
 import os
 import gpio.setup_board as board
 import gpio.board_constants as pins
-import integration_mapper as mapper
+from ci_gateway.constants import Result
+import aggregator_service as s
+import integration_mapper as m
 
 from log_handler import setup_logger
-from gpio.light import Light
+from gpio.light import Light, PulseWrapper
 from time import sleep
 
 
 def main():
     setup_logger()
     logging.info("Hello World!")
+
+    service = s.AggregatorService(get_integrations())
+
+    with board.SetupBoard((
+            pins.GREEN, pins.YELLOW, pins.RED)):
+        green = Light(pins.GREEN)
+        red = Light(pins.RED)
+        yellow = Light(pins.YELLOW)
+
+        while True:
+            with PulseWrapper(pins.BLUE):
+                result = service.run()
+                status = result['status']
+
+            if status == Result.PASS:
+                green.on()
+                red.off()
+                yellow.off()
+            elif status == Result.FAIL:
+                green.off()
+                red.on()
+                yellow.off()
+            elif status == Result.RUNNING:
+                green.off()
+                red.off()
+                yellow.on()
+            else:
+                green.on()
+                red.on()
+                yellow.on()
+
+            sleep(10)
+
+
+def get_integrations():
     RESPONSE_JSON = os.path.join(
         os.path.dirname(__file__),
         'integrations.conf')
     with open(RESPONSE_JSON) as integrations:
         data = json.load(integrations)
 
-    integrations = mapper.IntegrationMapper(data).get()
-    print(integrations)
+    return m.IntegrationMapper(data).get()
 
-    with board.SetupBoard((
-            pins.GREEN, pins.YELLOW, pins.RED)):
-        green = Light(pins.GREEN)
 
-        while True:
-            green.on()
-            sleep(1)
-            green.off()
-            sleep(1)
-            green.off()
+async def get(function):
+    with PulseWrapper(pins.BLUE):
+        function()
 
 
 if __name__ == "__main__":
