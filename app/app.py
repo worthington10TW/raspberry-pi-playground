@@ -42,9 +42,12 @@ async def main():
             elif status == Result.FAIL:
                 green.off()
                 red.on()
-            else:
+            elif status == Result.UNKNOWN:
                 green.on()
                 red.on()
+            else:
+                green.off()
+                red.off()
 
             yellow.on() if is_running else yellow.off()
 
