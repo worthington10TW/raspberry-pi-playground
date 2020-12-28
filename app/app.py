@@ -25,7 +25,7 @@ async def main():
             pins.GREEN, pins.YELLOW, pins.RED, pins.BLUE)):
         green = Light(pins.GREEN)
         red = Light(pins.RED)
-        yellow = Pulse(pins.YELLOW)
+        yellow = Light(pins.YELLOW)
         blue = Light(pins.BLUE)
 
         while True:
@@ -46,7 +46,7 @@ async def main():
                 green.on()
                 red.on()
 
-            yellow.start() if is_running else yellow.stop()
+            yellow.on() if is_running else yellow.off()
 
             sleep(10)
 
