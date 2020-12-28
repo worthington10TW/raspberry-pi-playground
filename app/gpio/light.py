@@ -53,12 +53,12 @@ class Pulse:
     def __init__(self, pin):
         self.pin = pin
         self._is_pulsing = False
-        self.pwm = GPIO.PWM(self.pin, 100)
-        dc = 0
-        self.pwm.start(dc)
 
     def on(self):
         self._is_pulsing = True
+        self.pwm = GPIO.PWM(self.pin, 100)
+        dc = 0
+        self.pwm.start(dc)
         logging.debug(f'Light {self.pin} pulsing')
         self.task = threading.Thread(name='pulse', target=self.pulse)
         self.task.start()
