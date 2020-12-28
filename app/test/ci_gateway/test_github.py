@@ -4,6 +4,7 @@ import unittest
 import pytest
 import json
 import requests_mock
+import os
 from app.ci_gateway import github
 
 
@@ -83,7 +84,10 @@ class GithubTests(unittest.TestCase):
 
     @requests_mock.Mocker()
     def test_gets_latest_from_git(self, m):
-        with open('response.json') as json_file:
+        RESPONSE_JSON = os.path.join(
+            os.path.dirname(__file__),
+            'response.json')
+        with open(RESPONSE_JSON) as json_file:
             data = json.load(json_file)
             m.get('https://api.github.com/repos/super-man/awesome/actions/runs',  # noqa: E501
                   json=data, status_code=200)
