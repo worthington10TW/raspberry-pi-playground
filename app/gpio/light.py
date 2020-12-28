@@ -14,11 +14,11 @@ class LightWrapper:
         self.light = Light(pin)
 
     def __enter__(self):
-        self.pulse.on()
+        self.light.on()
         return self
 
     def __exit__(self, type, value, traceback):
-        self.pulse.off()
+        self.light.off()
 
 
 class PulseWrapper:
