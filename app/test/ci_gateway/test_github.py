@@ -6,6 +6,7 @@ import json
 import requests_mock
 import os
 from app.ci_gateway import github
+from app.ci_gateway import constants as c
 
 
 class GithubTests(unittest.TestCase):
@@ -17,8 +18,8 @@ class GithubTests(unittest.TestCase):
             "created_at": "2020-12-28T09:23:57Z"
         }"""
         result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual("GITHUB", result["type"])
-        self.assertEqual("PASS", result["status"])
+        self.assertEqual(c.Integration.GITHUB, result["type"])
+        self.assertEqual(c.Result.PASS, result["status"])
         self.assertEqual("2020-12-28T09:23:57Z", result["start"])
         self.assertEqual(448533827, result["id"])
 
@@ -30,7 +31,7 @@ class GithubTests(unittest.TestCase):
             "created_at": "2020-12-28T09:23:57Z"
         }"""
         result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual("RUNNING", result["status"])
+        self.assertEqual(c.Result.RUNNING, result["status"])
 
     def test_queued(self):
         latest = """{
@@ -40,7 +41,7 @@ class GithubTests(unittest.TestCase):
             "created_at": "2020-12-28T09:23:57Z"
         }"""
         result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual("RUNNING", result["status"])
+        self.assertEqual(c.Result.RUNNING, result["status"])
 
     def test_pass(self):
         latest = """{
@@ -50,7 +51,7 @@ class GithubTests(unittest.TestCase):
             "created_at": "2020-12-28T09:23:57Z"
         }"""
         result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual("PASS", result["status"])
+        self.assertEqual(c.Result.PASS, result["status"])
 
     def test_failed(self):
         latest = """{
@@ -60,7 +61,7 @@ class GithubTests(unittest.TestCase):
             "created_at": "2020-12-28T09:23:57Z"
         }"""
         result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual("FAIL", result["status"])
+        self.assertEqual(c.Result.FAIL, result["status"])
 
     def test_unknown_not_completed(self):
         latest = """{
@@ -70,7 +71,7 @@ class GithubTests(unittest.TestCase):
             "created_at": "2020-12-28T09:23:57Z"
         }"""
         result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual("UNKNOWN", result["status"])
+        self.assertEqual(c.Result.UNKNOWN, result["status"])
 
     def test_unknown_completed(self):
         latest = """{
@@ -80,7 +81,7 @@ class GithubTests(unittest.TestCase):
             "created_at": "2020-12-28T09:23:57Z"
         }"""
         result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual("UNKNOWN", result["status"])
+        self.assertEqual(c.Result.UNKNOWN, result["status"])
 
     @requests_mock.Mocker()
     def test_gets_latest_from_git(self, m):
@@ -92,8 +93,8 @@ class GithubTests(unittest.TestCase):
             m.get('https://api.github.com/repos/super-man/awesome/actions/runs',  # noqa: E501
                   json=data, status_code=200)
             result = github.GitHubAction('super-man', 'awesome').get_latest()
-            self.assertEqual("GITHUB", result["type"])
-            self.assertEqual("FAIL", result["status"])
+            self.assertEqual(c.Integration.GITHUB, result["type"])
+            self.assertEqual(c.Result.FAIL, result["status"])
 
     @requests_mock.Mocker()
     def test_fails_when_not_200(self, m):

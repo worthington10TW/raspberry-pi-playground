@@ -1,23 +1,17 @@
 #!/usr/bin/env python3
 
 import unittest
-import json
-from app.ci_gateway import github
+
+from app.ci_gateway import constants as r
+from app import aggregator_service as s
 
 
 class GithubTests(unittest.TestCase):
-    def test_map_result(self):
-        latest = """{
-            "id": 448533827,
-            "status": "completed",
-            "conclusion": "success",
-            "created_at": "2020-12-28T09:23:57Z"
-        }"""
-        result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual("GITHUB", result["type"])
-        self.assertEqual("PASS", result["status"])
-        self.assertEqual("2020-12-28T09:23:57Z", result["start"])
-        self.assertEqual(448533827, result["id"])
+    def test_aggregates_responses(self):
+        result = s.AggregatorService("test").get()
+        self.assertEqual("AGGREGATED", result["type"])
+        self.assertEqual(None, result["start"])
+        self.assertEqual(r.Result.PASS, result["status"])
 
 
 if __name__ == '__main__':
