@@ -13,7 +13,7 @@ import time
 from log_handler import setup_logger
 
 
-def main():
+async def main():
     setup_logger()
     logging.info("Hello World!")
 
@@ -40,9 +40,10 @@ def main():
                 board.off(Lights.GREEN)
                 board.off(Lights.RED)
 
-            board.pulse(Lights.YELLOW) \
-                if is_running \
-                else board.off(Lights.YELLOW)
+            if is_running:
+                await board.pulse(Lights.YELLOW)
+            else:
+                board.off(Lights.YELLOW)
 
             time.sleep(10)
 

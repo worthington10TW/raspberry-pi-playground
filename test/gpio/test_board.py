@@ -2,12 +2,13 @@
 
 import unittest
 from unittest import mock
+import aiounittest
 
 from src.gpio.board import Board
 from src.gpio.constants import Lights
 
 
-class BoardTests(unittest.TestCase):
+class BoardTests(aiounittest.AsyncTestCase):
     @mock.patch('Mock.GPIO.setwarnings')
     def test_warningsAreDisabled(self, mocked):
         with Board():
@@ -44,11 +45,11 @@ class BoardTests(unittest.TestCase):
             mocked.assert_called_with(Lights.BLUE.value, 0)
 
     @mock.patch('Mock.GPIO.PWM')
-    def test_pulse(self, mocked):
+    async def test_pulse(self, mocked):
         mocked.return_value.ChangeDutyCycle = mock.MagicMock()
         mocked.return_value.stop = mock.MagicMock()
         with Board() as board:
-            board.pulse(Lights.BLUE)
+            await board.pulse(Lights.BLUE)
             mocked.assert_called_with(Lights.BLUE.value, 100)
             board.off(Lights.BLUE)
             assert mocked.return_value.stop.called

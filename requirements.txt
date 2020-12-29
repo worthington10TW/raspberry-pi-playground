@@ -5,3 +5,4 @@ requests~=2.25.1
 requests-mock
 constants~=0.6.0
 setuptools~=51.1.0
+aiounittest

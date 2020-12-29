@@ -6,8 +6,8 @@ else:
     from RPi import GPIO
 
 import logging
-import threading
-import time
+import asyncio
+
 from .constants import Lights
 
 
@@ -43,28 +43,25 @@ class Board(object):
         self.GPIO.output(light.value, self.GPIO.LOW)
         logging.debug(f'Light {light} off')
 
-    def pulse(self, light):
+    async def pulse(self, light):
         dc = 0
         self.pwm[light].start(dc)
 
         logging.debug(f'Light {light} pulsing...')
-        pwm = self.pwm[light]
-        task = threading.Thread(name='pulse', target=pulse, args=(pwm,))
-        task.start()
+
+        asyncio.ensure_future(pulse(self.pwm[light]))
+        await asyncio.sleep(0.01)
 
     def __exit__(self, type, value, traceback):
         logging.info('Cleaning up GPIO')
         self.GPIO.cleanup()
 
 
-def pulse(pwm):
-    try:
-        while True:
-            for dc in range(0, 101, 5):
-                pwm.ChangeDutyCycle(dc)
-                time.sleep(0.05)
-            for dc in range(95, 0, -5):
-                pwm.ChangeDutyCycle(dc)
-                time.sleep(0.05)
-    except KeyboardInterrupt:
-        pass
+async def pulse(pwm):
+    while True:
+        for dc in range(0, 101, 5):
+            pwm.ChangeDutyCycle(dc)
+            await asyncio.sleep(0.05)
+        for dc in range(95, 0, -5):
+            pwm.ChangeDutyCycle(dc)
+            await asyncio.sleep(0.05)
