@@ -1,16 +1,19 @@
 init:
 	PYTHONPATH=$PYTHONPATH:..
 	pip3 install -r requirements.txt
-	python3 -m flake8 app
+	pip3 install -e .
+	python3 -m flake8 src
+	python3 -m flake8 test
 
 .PHONY: test
 test: init
-	python3 -m pytest --pyargs app -v 
+	python3 -m pytest --pyargs test -v
 
 .PHONY: install
 install: init
-	pip3 wheel .
+	pip3 install -e .
 
 .PHONY: run
 run: init
-	python3 app/app.py
+	python3 src/app.py
+

@@ -6,20 +6,19 @@ import json
 import os
 import gpio.setup_board as board
 import gpio.board_constants as pins
-from ci_gateway.constants import Result
-import aggregator_service as s
-import integration_mapper as m
+from service.aggregator_service import AggregatorService, Result
+from service.integration_mapper import IntegrationMapper
+import time
 
 from log_handler import setup_logger
 from gpio.light import Light, Pulse, LightWrapper
-from time import sleep
 
 
 def main():
     setup_logger()
     logging.info("Hello World!")
 
-    service = s.AggregatorService(get_integrations())
+    aggregator = AggregatorService(get_integrations())
 
     with board.SetupBoard((
             pins.GREEN, pins.YELLOW, pins.RED, pins.BLUE)):
@@ -31,7 +30,7 @@ def main():
         while True:
             with LightWrapper(pins.BLUE):
                 blue.on()
-                result = service.run()
+                result = aggregator.run()
                 status = result['status']
                 is_running = result['is_running']
                 blue.off()
@@ -51,7 +50,7 @@ def main():
 
             yellow.on() if is_running else yellow.off()
 
-            sleep(10)
+            time.sleep(10)
 
 
 def get_integrations():
@@ -61,7 +60,7 @@ def get_integrations():
     with open(RESPONSE_JSON) as integrations:
         data = json.load(integrations)
 
-    return m.IntegrationMapper(data).get()
+    return IntegrationMapper(data).get()
 
 
 if __name__ == "__main__":

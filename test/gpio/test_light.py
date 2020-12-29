@@ -2,7 +2,7 @@
 
 import unittest
 from unittest import mock
-from app.gpio.light import Light, Pulse
+from src.gpio.light import Light, Pulse
 
 
 class LightTests(unittest.TestCase):

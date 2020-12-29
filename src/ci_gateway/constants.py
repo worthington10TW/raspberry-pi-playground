@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-from enum import Enum
+import enum
 
 
-class Result(Enum):
+class Result(enum.Enum):
     PASS = "PASS"
     FAIL = "FAIL"
     RUNNING = "RUNNING"
@@ -11,5 +11,5 @@ class Result(Enum):
     NONE = "NONE"
 
 
-class Integration(Enum):
+class Integration(enum.Enum):
     GITHUB = "GITHUB"

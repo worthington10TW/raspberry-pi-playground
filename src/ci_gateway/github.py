@@ -1,7 +1,7 @@
 import requests
 import sys
 import os
-from .constants import Integration, Result
+from src.ci_gateway.constants import Integration, Result
 
 
 class GitHubAction(object):

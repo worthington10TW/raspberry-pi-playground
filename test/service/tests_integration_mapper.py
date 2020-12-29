@@ -4,8 +4,8 @@ import unittest
 import pytest
 from unittest import mock
 
-from app.ci_gateway import constants as c
-from app import integration_mapper as m
+import src.ci_gateway.constants as cons
+from src.service.integration_mapper import IntegrationMapper, MismatchError
 
 
 class IntegrationMapperTests(unittest.TestCase):
@@ -17,8 +17,8 @@ class IntegrationMapperTests(unittest.TestCase):
                 'repo': 'super-repo'
             }
         ]
-        with pytest.raises(m.MismatchError) as excinfo:
-            m.IntegrationMapper(integrations, 1)
+        with pytest.raises(MismatchError) as excinfo:
+            IntegrationMapper(integrations, 1)
 
         msg = 'Integration error: we currently do not integrate with BLURGH.'  # noqa: E501
         self.assertEqual(msg, str(excinfo.value))
@@ -36,12 +36,12 @@ class IntegrationMapperTests(unittest.TestCase):
                 'repo': 'another-repo'
             }
         ]
-        result = m.IntegrationMapper(integrations, 1).get()
+        result = IntegrationMapper(integrations, 1).get()
         self.assertEqual(2, len(result))
-        [self.assertEqual(c.Integration.GITHUB, r['type']) for r in result]
+        [self.assertEqual(cons.Integration.GITHUB, r['type']) for r in result]
         [self.assertIsNotNone(r['action']) for r in result]
 
-    @mock.patch('app.ci_gateway.github.GitHubAction')
+    @mock.patch('src.ci_gateway.github.GitHubAction')
     def test_executes_correct_function(self, mocked):
         integrations = [
             {
@@ -57,7 +57,7 @@ class IntegrationMapperTests(unittest.TestCase):
         ]
         mocked.return_value.get_latest = mock.MagicMock()
 
-        result = m.IntegrationMapper(integrations, 1).get()
+        result = IntegrationMapper(integrations, 1).get()
 
         self.assertEqual(2, mocked.call_count)
         self.assertEqual(mock.call('meee', 'super-repo'),

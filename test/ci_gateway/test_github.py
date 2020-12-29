@@ -5,8 +5,8 @@ import pytest
 import json
 import requests_mock
 import os
-from app.ci_gateway import github
-from app.ci_gateway import constants as c
+from src.ci_gateway.github import GitHubAction, APIError
+from src.ci_gateway.constants import Result, Integration
 
 os.environ['GITHUB_TOKEN'] = 'secret'
 
@@ -19,9 +19,9 @@ class GithubTests(unittest.TestCase):
             "conclusion": "success",
             "created_at": "2020-12-28T09:23:57Z"
         }"""
-        result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual(c.Integration.GITHUB, result["type"])
-        self.assertEqual(c.Result.PASS, result["status"])
+        result = GitHubAction.map_result(json.loads(latest))
+        self.assertEqual(Integration.GITHUB, result["type"])
+        self.assertEqual(Result.PASS, result["status"])
         self.assertEqual("2020-12-28T09:23:57Z", result["start"])
         self.assertEqual(448533827, result["id"])
 
@@ -32,8 +32,8 @@ class GithubTests(unittest.TestCase):
             "conclusion": null,
             "created_at": "2020-12-28T09:23:57Z"
         }"""
-        result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual(c.Result.RUNNING, result["status"])
+        result = GitHubAction.map_result(json.loads(latest))
+        self.assertEqual(Result.RUNNING, result["status"])
 
     def test_queued(self):
         latest = """{
@@ -42,8 +42,8 @@ class GithubTests(unittest.TestCase):
             "conclusion": null,
             "created_at": "2020-12-28T09:23:57Z"
         }"""
-        result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual(c.Result.RUNNING, result["status"])
+        result = GitHubAction.map_result(json.loads(latest))
+        self.assertEqual(Result.RUNNING, result["status"])
 
     def test_pass(self):
         latest = """{
@@ -52,8 +52,8 @@ class GithubTests(unittest.TestCase):
             "conclusion": "success",
             "created_at": "2020-12-28T09:23:57Z"
         }"""
-        result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual(c.Result.PASS, result["status"])
+        result = GitHubAction.map_result(json.loads(latest))
+        self.assertEqual(Result.PASS, result["status"])
 
     def test_failed(self):
         latest = """{
@@ -62,8 +62,8 @@ class GithubTests(unittest.TestCase):
             "conclusion": "failure",
             "created_at": "2020-12-28T09:23:57Z"
         }"""
-        result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual(c.Result.FAIL, result["status"])
+        result = GitHubAction.map_result(json.loads(latest))
+        self.assertEqual(Result.FAIL, result["status"])
 
     def test_unknown_not_completed(self):
         latest = """{
@@ -72,8 +72,8 @@ class GithubTests(unittest.TestCase):
             "conclusion": null,
             "created_at": "2020-12-28T09:23:57Z"
         }"""
-        result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual(c.Result.UNKNOWN, result["status"])
+        result = GitHubAction.map_result(json.loads(latest))
+        self.assertEqual(Result.UNKNOWN, result["status"])
 
     def test_unknown_completed(self):
         latest = """{
@@ -82,8 +82,8 @@ class GithubTests(unittest.TestCase):
             "conclusion": "completed",
             "created_at": "2020-12-28T09:23:57Z"
         }"""
-        result = github.GitHubAction.map_result(json.loads(latest))
-        self.assertEqual(c.Result.UNKNOWN, result["status"])
+        result = GitHubAction.map_result(json.loads(latest))
+        self.assertEqual(Result.UNKNOWN, result["status"])
 
     @requests_mock.Mocker()
     def test_gets_latest_from_git(self, m):
@@ -94,16 +94,16 @@ class GithubTests(unittest.TestCase):
             data = json.load(json_file)
             m.get('https://api.github.com/repos/super-man/awesome/actions/runs',  # noqa: E501
                   json=data, status_code=200)
-            result = github.GitHubAction('super-man', 'awesome').get_latest()
-            self.assertEqual(c.Integration.GITHUB, result["type"])
-            self.assertEqual(c.Result.FAIL, result["status"])
+            result = GitHubAction('super-man', 'awesome').get_latest()
+            self.assertEqual(Integration.GITHUB, result["type"])
+            self.assertEqual(Result.FAIL, result["status"])
 
     @requests_mock.Mocker()
     def test_fails_when_not_200(self, m):
-        with pytest.raises(github.APIError) as excinfo:
+        with pytest.raises(APIError) as excinfo:
             m.get('https://api.github.com/repos/super-man/awesome/actions/runs',  # noqa: E501
                   json={}, status_code=400)
-            github.GitHubAction('super-man', 'awesome').get_latest()
+            GitHubAction('super-man', 'awesome').get_latest()
 
         msg = "APIError: GET https://api.github.com/repos/super-man/awesome/actions/runs 400"  # noqa: E501
         self.assertEqual(msg, str(excinfo.value))

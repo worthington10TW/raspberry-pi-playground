@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from ci_gateway import constants as c
-from ci_gateway import github
+from src.ci_gateway.constants import Integration
+from src.ci_gateway.github import GitHubAction
 
 
 class IntegrationMapper(object):
@@ -10,7 +10,7 @@ class IntegrationMapper(object):
         self.__validate_integrations()
 
     def __validate_integrations(self):
-        valid_integrations = set(item.value for item in c.Integration)
+        valid_integrations = set(item.value for item in Integration)
 
         for i in self.integrations:
             if i['type'] not in valid_integrations:
@@ -21,18 +21,18 @@ class IntegrationMapper(object):
 
 
 def _map_git(username, repo):
-    action = github.GitHubAction(username, repo)
+    action = GitHubAction(username, repo)
     return action.get_latest
 
 
 def _map(integration):
     action = {
-        c.Integration.GITHUB: _map_git(integration['username'],
-                                       integration['repo']),
+        Integration.GITHUB: _map_git(integration['username'],
+                                     integration['repo']),
     }
     return {
-        'type': c.Integration[integration['type']],
-        'action': action.get(c.Integration[integration['type']])
+        'type': Integration[integration['type']],
+        'action': action.get(Integration[integration['type']])
     }
 
 

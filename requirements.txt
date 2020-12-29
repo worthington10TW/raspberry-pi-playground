@@ -1,5 +1,7 @@
 Mock.GPIO
-pytest
+pytest~=6.2.1
 flake8
-requests
+requests~=2.25.1
 requests-mock
+constants~=0.6.0
+setuptools~=51.1.0

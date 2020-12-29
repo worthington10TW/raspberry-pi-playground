@@ -7,7 +7,7 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='raspberry pi playground',
+    name='src',
     version='0.1.0',
     description='Raspberry zero toy, maybe a build centre or something cool',
     long_description=readme,
@@ -15,5 +15,5 @@ setup(
     author_email='worthingtown@gmail.com',
     url='https://github.com/worthington10TW/raspberry-pi-playground',
     license=license,
-    packages=find_packages(exclude=('test', 'docs'))
+    packages=find_packages(include=('src', 'src.*'))
 )
