@@ -11,8 +11,8 @@ import threading
 
 
 class LightWrapper:
-    def __init__(self, pin):
-        self.light = Light(pin)
+    def __init__(self, light):
+        self.light = Light(light)
 
     def __enter__(self):
         self.light.on()
@@ -23,8 +23,8 @@ class LightWrapper:
 
 
 class PulseWrapper:
-    def __init__(self, pin):
-        self.pulse = Pulse(pin)
+    def __init__(self, light):
+        self.pulse = Pulse(light)
 
     def __enter__(self):
         self.pulse.on()
@@ -35,38 +35,38 @@ class PulseWrapper:
 
 
 class Light:
-    def __init__(self, pin):
-        self.pin = pin
+    def __init__(self, light):
+        self.light = light
 
     def on(self):
-        logging.debug(f'Light {self.pin} turning on...')
-        GPIO.output(self.pin, GPIO.HIGH)
-        logging.debug(f'Light {self.pin} on')
+        logging.debug(f'Light {self.light} turning on...')
+        GPIO.output(self.light.value, GPIO.HIGH)
+        logging.debug(f'Light {self.light} on')
 
     def off(self):
-        logging.debug(f'Light {self.pin} turning off...')
-        GPIO.output(self.pin, GPIO.LOW)
-        logging.debug(f'Light {self.pin} off')
+        logging.debug(f'Light {self.light} turning off...')
+        GPIO.output(self.light.value, GPIO.LOW)
+        logging.debug(f'Light {self.light} off')
 
 
 class Pulse:
-    def __init__(self, pin):
-        self.pin = pin
+    def __init__(self, light):
+        self.light = light
         self._is_pulsing = False
-        self.pwm = GPIO.PWM(self.pin, 100)
+        self.pwm = GPIO.PWM(self.light.value, 100)
 
     def on(self):
         self._is_pulsing = True
         dc = 0
         self.pwm.start(dc)
-        logging.debug(f'Light {self.pin} pulsing')
+        logging.debug(f'Light {self.light} pulsing')
         self.task = threading.Thread(name='pulse', target=self.pulse)
         self.task.start()
         return self
 
     def off(self):
         self._is_pulsing = False
-        logging.debug(f'Light {self.pin} turning off')
+        logging.debug(f'Light {self.light} turning off')
         self.pwm.stop()
 
     @property

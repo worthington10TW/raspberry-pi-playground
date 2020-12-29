@@ -5,7 +5,7 @@ import asyncio
 import json
 import os
 import gpio.setup_board as board
-import gpio.board_constants as pins
+from gpio.constants import Lights
 from service.aggregator_service import AggregatorService, Result
 from service.integration_mapper import IntegrationMapper
 import time
@@ -21,14 +21,14 @@ def main():
     aggregator = AggregatorService(get_integrations())
 
     with board.SetupBoard((
-            pins.GREEN, pins.YELLOW, pins.RED, pins.BLUE)):
-        green = Light(pins.GREEN)
-        red = Light(pins.RED)
-        yellow = Pulse(pins.YELLOW)
-        blue = Light(pins.BLUE)
+            Lights.GREEN, Lights.YELLOW, Lights.RED, Lights.BLUE)):
+        green = Light(Lights.GREEN)
+        red = Light(Lights.RED)
+        yellow = Pulse(Lights.YELLOW)
+        blue = Light(Lights.BLUE)
 
         while True:
-            with LightWrapper(pins.BLUE):
+            with LightWrapper(Lights.BLUE):
                 blue.on()
                 result = aggregator.run()
                 status = result['status']
