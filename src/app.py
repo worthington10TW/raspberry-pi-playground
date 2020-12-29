@@ -43,7 +43,7 @@ async def main():
             else:
                 board.off(Lights.YELLOW)
 
-            await asyncio.sleep(60)
+            await asyncio.sleep(30)
 
 
 def get_integrations():
