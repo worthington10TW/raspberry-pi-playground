@@ -3,7 +3,7 @@
 import unittest
 from unittest import mock
 import aiounittest
-
+import asyncio
 from src.gpio.board import Board
 from src.gpio.constants import Lights
 
@@ -49,7 +49,8 @@ class BoardTests(aiounittest.AsyncTestCase):
         mocked.return_value.ChangeDutyCycle = mock.MagicMock()
         mocked.return_value.stop = mock.MagicMock()
         with Board() as board:
-            await board.pulse(Lights.BLUE)
+            asyncio.ensure_future(board.pulse(Lights.BLUE))
+            await asyncio.sleep(1)
             mocked.assert_called_with(Lights.BLUE.value, 100)
             board.off(Lights.BLUE)
             assert mocked.return_value.stop.called

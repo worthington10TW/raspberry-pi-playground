@@ -8,8 +8,6 @@ from gpio.board import Board
 from gpio.constants import Lights
 from service.aggregator_service import AggregatorService, Result
 from service.integration_mapper import IntegrationMapper
-import time
-
 from log_handler import setup_logger
 
 
@@ -41,11 +39,11 @@ async def main():
                 board.off(Lights.RED)
 
             if is_running:
-                await board.pulse(Lights.YELLOW)
+                asyncio.ensure_future(board.pulse(Lights.YELLOW))
             else:
                 board.off(Lights.YELLOW)
 
-            time.sleep(10)
+            await asyncio.sleep(10)
 
 
 def get_integrations():

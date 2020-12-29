@@ -49,8 +49,7 @@ class Board(object):
 
         logging.debug(f'Light {light} pulsing...')
 
-        asyncio.ensure_future(pulse(self.pwm[light]))
-        await asyncio.sleep(0.01)
+        await pulse(self.pwm[light])
 
     def __exit__(self, type, value, traceback):
         logging.info('Cleaning up GPIO')
