@@ -16,8 +16,14 @@ class SetupBoard(object):
         logging.info('Setting up GPIO')
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
-        [GPIO.setup(light, GPIO.OUT, initial=GPIO.LOW)
+        [GPIO.setup(light.value, GPIO.OUT, initial=GPIO.LOW)
             for light in self.lights]
+
+    def on(self, light):
+        logging.info(f'Turning light on {light}')
+
+    def off(self, light):
+        logging.info(f'Turning light off {light}')
 
     def __exit__(self, type, value, traceback):
         logging.info('Cleaning up GPIO')
