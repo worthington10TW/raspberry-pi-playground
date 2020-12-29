@@ -44,7 +44,6 @@ class Board(object):
 
     def pulse(self, light):
         dc = 0
-        print("HERE")
         self.pwm[light].start(dc)
 
         loop = asyncio.get_event_loop()
