@@ -20,10 +20,11 @@ class AggregatorService(object):
     def __init__(self, integrations):
         self.integrations = integrations
 
-    def run(self):
+    async def run(self):
+        tasks = [integration['action']() for integration in self.integrations]
+
         result = []
-        for i in self.integrations:
-            result.append(i['action']())
+        [result.append(await task) for task in tasks]
 
         return dict(
             type="AGGREGATED",

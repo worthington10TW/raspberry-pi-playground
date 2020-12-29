@@ -1,7 +1,8 @@
-import requests
 import sys
 import os
+import logging
 from src.ci_gateway.constants import Integration, Result
+from aiohttp import ClientSession
 
 
 class GitHubAction(object):
@@ -10,19 +11,26 @@ class GitHubAction(object):
         self.repo = repo
         self.token = os.getenv('GITHUB_TOKEN')
 
-    def get_latest(self):
+    async def get_latest(self):
         base = 'https://api.github.com'
         url = f'{base}/repos/{self.username}/{self.repo}/actions/runs'
 
-        resp = requests.get(
-            url,
-            headers={'Authorization': f'token {self.token}'})
-        if resp.status_code != 200:
-            raise APIError('GET', url, resp.status_code)
+        logging.debug(f'Calling {url}')
 
-        latest = resp.json()['workflow_runs'][0]
+        async with ClientSession() as session:
+            resp = await session.get(
+                url,
+                headers={'Authorization': f'token {self.token}'})
 
-        return GitHubAction.map_result(latest)
+            if resp.status != 200:
+                raise APIError('GET', url, resp.status)
+
+            json = await resp.json()
+        latest = json['workflow_runs'][0]
+        response = GitHubAction.map_result(latest)
+        logging.debug(f'Called {url}')
+        logging.debug(f'Response {response}')
+        return response
 
     @staticmethod
     def map_result(latest):

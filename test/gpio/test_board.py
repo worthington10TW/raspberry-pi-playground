@@ -56,6 +56,20 @@ class BoardTests(aiounittest.AsyncTestCase):
             assert mocked.return_value.stop.called
             mocked.return_value.ChangeDutyCycle.called
 
+    @mock.patch('Mock.GPIO.PWM')
+    async def test_pulse_not_called_if_active(self, mocked):
+        mocked.return_value.start = mock.MagicMock()
+        mocked.return_value.stop = mock.MagicMock()
+        with Board() as board:
+            self.assertEqual(0, mocked.return_value.start.call_count)
+            await board.pulse(Lights.BLUE)
+            await asyncio.sleep(1)
+            self.assertEqual(1, mocked.return_value.start.call_count)
+            await board.pulse(Lights.BLUE)
+            await asyncio.sleep(1)
+            self.assertEqual(1, mocked.return_value.start.call_count)
+            board.off(Lights.BLUE)
+
 
 if __name__ == '__main__':
-    unittest.main()
+    aiounittest.main()

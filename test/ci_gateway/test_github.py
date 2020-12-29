@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 
-import unittest
 import pytest
 import json
 import requests_mock
 import os
+import aiounittest
 from src.ci_gateway.github import GitHubAction, APIError
 from src.ci_gateway.constants import Result, Integration
 
 os.environ['GITHUB_TOKEN'] = 'secret'
 
 
-class GithubTests(unittest.TestCase):
+class GithubTests(aiounittest.AsyncTestCase):
     def test_map_result(self):
         latest = """{
             "id": 448533827,
@@ -86,28 +86,32 @@ class GithubTests(unittest.TestCase):
         self.assertEqual(Result.UNKNOWN, result["status"])
 
     @requests_mock.Mocker()
-    def test_gets_latest_from_git(self, m):
+    async def test_gets_latest_from_git(self, m):
         RESPONSE_JSON = os.path.join(
             os.path.dirname(__file__),
             'response.json')
         with open(RESPONSE_JSON) as json_file:
             data = json.load(json_file)
-            m.get('https://api.github.com/repos/super-man/awesome/actions/runs',  # noqa: E501
-                  json=data, status_code=200)
-            result = GitHubAction('super-man', 'awesome').get_latest()
-            self.assertEqual(Integration.GITHUB, result["type"])
-            self.assertEqual(Result.FAIL, result["status"])
+
+        m.get('https://api.github.com/repos/super-man/awesome/actions/runs',  # noqa: E501
+              json=data, status_code=200)
+
+        action = GitHubAction('super-man', 'awesome')
+        result = await action.get_latest()
+        self.assertEqual(Integration.GITHUB, result["type"])
+        self.assertEqual(Result.FAIL, result["status"])
 
     @requests_mock.Mocker()
-    def test_fails_when_not_200(self, m):
+    async def test_fails_when_not_200(self, m):
         with pytest.raises(APIError) as excinfo:
             m.get('https://api.github.com/repos/super-man/awesome/actions/runs',  # noqa: E501
                   json={}, status_code=400)
-            GitHubAction('super-man', 'awesome').get_latest()
+            action = GitHubAction('super-man', 'awesome')
+            await action.get_latest()
 
         msg = "APIError: GET https://api.github.com/repos/super-man/awesome/actions/runs 400"  # noqa: E501
         self.assertEqual(msg, str(excinfo.value))
 
 
 if __name__ == '__main__':
-    unittest.main()
+    aiounittest.main()

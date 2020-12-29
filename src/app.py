@@ -20,7 +20,7 @@ async def main():
     with Board() as board:
         while True:
             board.on(Lights.BLUE)
-            result = aggregator.run()
+            result = await aggregator.run()
             status = result['status']
             is_running = result['is_running']
             board.off(Lights.BLUE)
