@@ -15,7 +15,7 @@ class GitHubAction(object):
         base = 'https://api.github.com'
         url = f'{base}/repos/{self.username}/{self.repo}/actions/runs'
 
-        logging.debug(f'Calling {url}')
+        logging.log(f'Calling {url}')
 
         async with ClientSession() as session:
             resp = await session.get(
@@ -28,8 +28,8 @@ class GitHubAction(object):
             json = await resp.json()
         latest = json['workflow_runs'][0]
         response = GitHubAction.map_result(latest)
-        logging.debug(f'Called {url}')
-        logging.debug(f'Response {response}')
+        logging.log(f'Called {url}')
+        logging.log(f'Response {response}')
         return response
 
     @staticmethod
