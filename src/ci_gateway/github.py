@@ -15,7 +15,7 @@ class GitHubAction(object):
         base = 'https://api.github.com'
         url = f'{base}/repos/{self.username}/{self.repo}/actions/runs'
 
-        logging.info(f'Calling {url}')
+        logging.debug(f'Calling {url}')
 
         async with ClientSession() as session:
             resp = await session.get(
