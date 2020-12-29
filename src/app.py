@@ -4,14 +4,13 @@ import logging
 import asyncio
 import json
 import os
-import gpio.setup_board as board
+from gpio.board import Board
 from gpio.constants import Lights
 from service.aggregator_service import AggregatorService, Result
 from service.integration_mapper import IntegrationMapper
 import time
 
 from log_handler import setup_logger
-from gpio.light import Light, Pulse, LightWrapper
 
 
 def main():
@@ -20,35 +19,30 @@ def main():
 
     aggregator = AggregatorService(get_integrations())
 
-    with board.SetupBoard((
-            Lights.GREEN, Lights.YELLOW, Lights.RED, Lights.BLUE)) as b:
-
-        green = Light(Lights.GREEN)
-        red = Light(Lights.RED)
-        yellow = Pulse(Lights.YELLOW)
-
+    with Board() as board:
         while True:
-            with LightWrapper(Lights.BLUE):
-                b.on(Lights.BLUE)
-                result = aggregator.run()
-                status = result['status']
-                is_running = result['is_running']
-                b.off(Lights.BLUE)
+            board.on(Lights.BLUE)
+            result = aggregator.run()
+            status = result['status']
+            is_running = result['is_running']
+            board.off(Lights.BLUE)
 
             if status == Result.PASS:
-                green.on()
-                red.off()
+                board.on(Lights.GREEN)
+                board.off(Lights.RED)
             elif status == Result.FAIL:
-                green.off()
-                red.on()
+                board.off(Lights.GREEN)
+                board.on(Lights.RED)
             elif status == Result.UNKNOWN:
-                green.on()
-                red.on()
+                board.on(Lights.GREEN)
+                board.on(Lights.RED)
             else:
-                green.off()
-                red.off()
+                board.off(Lights.GREEN)
+                board.off(Lights.RED)
 
-            yellow.on() if is_running else yellow.off()
+            board.pulse(Lights.YELLOW) \
+                if is_running \
+                else board.off(Lights.YELLOW)
 
             time.sleep(10)
 

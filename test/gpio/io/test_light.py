@@ -2,7 +2,7 @@
 
 import unittest
 from unittest import mock
-from src.gpio.light import Light, Pulse
+from src.gpio.io.light import Light, Pulse
 from src.gpio.constants import Lights
 
 
