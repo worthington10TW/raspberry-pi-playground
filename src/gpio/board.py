@@ -18,11 +18,15 @@ class Board(object):
         self.GPIO.setmode(GPIO.BCM)
         self.GPIO.setwarnings(False)
         self.pwm = {}
-        [self.GPIO.setup(
-            light.value,
-            self.GPIO.OUT,
-            initial=self.GPIO.LOW)
-            for light in Lights]
+        for light in Lights:
+            self.GPIO.setup(
+                light.value,
+                self.GPIO.OUT,
+                initial=self.GPIO.LOW)
+            self.pwm[light] = self.GPIO.PWM(
+                light.value,
+                100)
+
         return self
 
     def on(self, light):
@@ -32,7 +36,6 @@ class Board(object):
 
     def off(self, light):
         if light in self.pwm:
-            print(f'Pulse {light} turning off...')
             self.pwm[light].stop()
 
         logging.debug(f'Light {light} turning off...')
@@ -40,8 +43,8 @@ class Board(object):
         logging.debug(f'Light {light} off')
 
     def pulse(self, light):
-        self.pwm[light] = GPIO.PWM(light.value, 100)
         dc = 0
+        print("HERE")
         self.pwm[light].start(dc)
 
         loop = asyncio.get_event_loop()
