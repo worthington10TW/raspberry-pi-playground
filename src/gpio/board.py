@@ -19,6 +19,7 @@ class Board(object):
         self.GPIO.setmode(GPIO.BCM)
         self.GPIO.setwarnings(False)
         self.pwm = {}
+        self.tasks = {}
         for light in Lights:
             self.GPIO.setup(
                 light.value,
@@ -38,18 +39,26 @@ class Board(object):
     def off(self, light):
         if light in self.pwm:
             self.pwm[light].stop()
+        if light in self.tasks:
+            self.tasks[light].cancel()
+            del self.tasks[light]
 
         logging.debug(f'Light {light} turning off...')
         self.GPIO.output(light.value, self.GPIO.LOW)
         logging.debug(f'Light {light} off')
 
     async def pulse(self, light):
+        if light in self.tasks:
+            logging.debug(f'Light {light} is already pulsing.')
+            return
+
         dc = 0
-        self.pwm[light].start(dc)
+        pwm = self.pwm[light]
+        pwm.start(dc)
 
+        self.tasks[light] = asyncio.ensure_future(pulse(pwm))
         logging.debug(f'Light {light} pulsing...')
-
-        await pulse(self.pwm[light])
+        await asyncio.sleep(0.001)
 
     def __exit__(self, type, value, traceback):
         logging.info('Cleaning up GPIO')

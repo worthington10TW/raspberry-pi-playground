@@ -39,7 +39,7 @@ async def main():
                 board.off(Lights.RED)
 
             if is_running:
-                asyncio.ensure_future(board.pulse(Lights.YELLOW))
+                await board.pulse(Lights.YELLOW)
             else:
                 board.off(Lights.YELLOW)
 
