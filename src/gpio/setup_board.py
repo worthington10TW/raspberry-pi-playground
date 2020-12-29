@@ -20,10 +20,14 @@ class SetupBoard(object):
             for light in self.lights]
 
     def on(self, light):
-        logging.info(f'Turning light on {light}')
+        logging.debug(f'Light {light} turning on...')
+        GPIO.output(light.value, GPIO.HIGH)
+        logging.debug(f'Light {light} on')
 
     def off(self, light):
-        logging.info(f'Turning light off {light}')
+        logging.debug(f'Light {light} turning off...')
+        GPIO.output(light.value, GPIO.LOW)
+        logging.debug(f'Light {light} off')
 
     def __exit__(self, type, value, traceback):
         logging.info('Cleaning up GPIO')

@@ -21,19 +21,19 @@ def main():
     aggregator = AggregatorService(get_integrations())
 
     with board.SetupBoard((
-            Lights.GREEN, Lights.YELLOW, Lights.RED, Lights.BLUE)):
+            Lights.GREEN, Lights.YELLOW, Lights.RED, Lights.BLUE)) as b:
+
         green = Light(Lights.GREEN)
         red = Light(Lights.RED)
         yellow = Pulse(Lights.YELLOW)
-        blue = Light(Lights.BLUE)
 
         while True:
             with LightWrapper(Lights.BLUE):
-                blue.on()
+                b.on(Lights.BLUE)
                 result = aggregator.run()
                 status = result['status']
                 is_running = result['is_running']
-                blue.off()
+                b.off(Lights.BLUE)
 
             if status == Result.PASS:
                 green.on()
