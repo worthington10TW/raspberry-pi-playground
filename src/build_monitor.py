@@ -30,9 +30,9 @@ class BuildMonitor(object):
         elif status == Result.UNKNOWN:
             self.board.on(Lights.GREEN)
             self.board.on(Lights.RED)
-        else:
-            self.board.off(Lights.GREEN)
-            self.board.off(Lights.RED)
+        # else:
+        #     self.board.off(Lights.GREEN)
+        #     self.board.off(Lights.RED)
 
         if is_running:
             await self.board.pulse(Lights.YELLOW)
