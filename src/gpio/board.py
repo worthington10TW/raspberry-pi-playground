@@ -39,7 +39,7 @@ class Board(object):
         logging.debug(f'Light {light} on')
 
     async def pulse(self, light: Lights):
-        if light in self.tasks:
+        if light.value in self.tasks:
             logging.debug(f'Light {light} is already pulsing.')
             return
 
@@ -51,25 +51,28 @@ class Board(object):
 
         pwm.start(dc)
 
-        self.tasks[light] = asyncio.ensure_future(pulse(pwm))
+        self.tasks[light.value] = asyncio.ensure_future(pulse(pwm))
         logging.debug(f'Light {light} pulsing...')
         await asyncio.sleep(0.001)
 
     def off(self, light: Lights):
-        if light.value in self.pwm:
-            self.pwm[light.value].stop()
-        if light in self.tasks:
-            self.tasks[light].cancel()
-            del self.tasks[light]
+        pwm = self.pwm.get(light.value)
+        if pwm is not None:
+            pwm.stop()
+
+        task = self.tasks.get(light.value)
+        if task is not None:
+            task.cancel()
+            self.tasks.pop(light.value)
 
         logging.debug(f'Light {light} turning off...')
         self.GPIO.output(light.value, self.GPIO.LOW)
         logging.debug(f'Light {light} off')
 
     def __exit__(self, type, value, traceback):
-        # logging.info('Cleaning up pulses')
-        # [task.cancel() for task in self.tasks]
-        # del self.tasks
+        logging.info('Cleaning up pulses')
+        [task.cancel() for task in self.tasks]
+        del self.tasks
 
         logging.info('Cleaning up GPIO')
         self.GPIO.cleanup()

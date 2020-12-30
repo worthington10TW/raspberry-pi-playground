@@ -20,7 +20,7 @@ class BuildMonitor(object):
         is_running = result['is_running']
         self.board.off(Lights.BLUE)
 
-        logging.info("Setting output")
+        logging.info(f'Setting output {status}')
         if status == Result.PASS:
             self.board.on(Lights.GREEN)
             self.board.off(Lights.RED)
