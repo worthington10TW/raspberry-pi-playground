@@ -1,51 +1,53 @@
 import sys
 import os
 import logging
+import asyncio
 from src.ci_gateway.constants import Integration, Result
 from aiohttp import ClientSession
-import asyncio
 from src.ci_gateway.api_error import APIError
 
 
-class GitHubAction(object):
+class CircleCI(object):
     def __init__(self, username, repo):
         self.username = username
         self.repo = repo
-        self.token = os.getenv('GITHUB_TOKEN')
+        self.token = os.getenv('CIRCLE_CI_TOKEN')
 
     async def get_latest(self):
-        base = 'https://api.github.com'
-        url = f'{base}/repos/{self.username}/{self.repo}/actions/runs'
-
+        base = 'https://circleci.com/api/v1.1'
+        url = f'{base}/project/github/{self.username}/{self.repo}?limit=1&shallow=true'  # noqa: E501
         logging.debug(f'Calling {url}')
 
         async with ClientSession() as session:
             resp = await session.get(
                 url,
-                headers={'Authorization': f'token {self.token}'})
+                headers={'Circle-Token': f'{self.token}',
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json'})
 
             if resp.status != 200:
                 raise APIError('GET', url, resp.status)
 
             json = await resp.json()
-        latest = json['workflow_runs'][0]
-        response = GitHubAction.map_result(latest)
+
+        # TODO Currently takes the top job result, not the top unique job
+        latest = json[0]
+        response = CircleCI.map_result(latest)
         logging.info(f'Called {url}')
         logging.info(f'Response {response}')
         return response
 
     @staticmethod
     def map_result(latest):
-        conclusion = latest["conclusion"]
-        status = latest["status"]
+        outcome = latest["outcome"]
+        lifecycle = latest["lifecycle"]
         return dict(
-            type=Integration.GITHUB,
-            id=latest["id"],
-            start=latest["created_at"],
-            status=Result.FAIL if status == "completed" and conclusion == "failure" else  # noqa: E501
-            Result.PASS if status == "completed" and conclusion == "success" else  # noqa: E501
-            Result.RUNNING if conclusion is None and (status == "queued" or status == "in_progress") else  # noqa: E501
-            Result.UNKNOWN)
+            type=Integration.CIRCLECI,
+            id=latest["build_num"],
+            start=latest["start_time"],
+            status=Result.RUNNING if lifecycle != "finished" else
+            Result.FAIL if outcome != "success" else  # noqa: E501
+            Result.PASS)
 
 
 if __name__ == "__main__":
@@ -55,7 +57,8 @@ if __name__ == "__main__":
     logger.addHandler(screen_handler)
 
     loop = asyncio.get_event_loop()
-    task = GitHubAction(sys.argv[1], sys.argv[2]).get_latest()
+    task = CircleCI(sys.argv[1], sys.argv[2]).get_latest()
     done, pending = loop.run_until_complete(asyncio.wait((task,)))
-    value = done[0].future.result()
-    print(value)
+    for future in done:
+        value = future.result()
+        print(value)

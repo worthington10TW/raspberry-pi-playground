@@ -8,6 +8,7 @@ from gpio.board import Board
 from gpio.constants import Lights
 from service.aggregator_service import AggregatorService, Result
 from service.integration_mapper import IntegrationMapper
+from ci_gateway import integrations as available_integrations
 from log_handler import setup_logger
 
 
@@ -53,7 +54,7 @@ def get_integrations():
     with open(RESPONSE_JSON) as integrations:
         data = json.load(integrations)
 
-    return IntegrationMapper(data).get()
+    return IntegrationMapper(available_integrations.get_all()).get(data)
 
 
 if __name__ == "__main__":

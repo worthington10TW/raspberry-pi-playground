@@ -1,39 +1,24 @@
 #!/usr/bin/env python3
 
 from src.ci_gateway.constants import Integration
-from src.ci_gateway.github import GitHubAction
 
 
 class IntegrationMapper(object):
-    def __init__(self, integrations):
-        self.integrations = integrations
-        self.__validate_integrations()
+    def __init__(self, available_integrations):
+        self.available_integrations = available_integrations
 
-    def __validate_integrations(self):
-        valid_integrations = set(item.value for item in Integration)
-
-        for i in self.integrations:
-            if i['type'] not in valid_integrations:
+    def get(self, integrations):
+        for i in integrations:
+            if i['type'] not in Integration.__members__:
                 raise MismatchError(i['type'])
 
-    def get(self):
-        return list(map(_map, self.integrations))
+        return list(map(self._map, integrations))
 
-
-def _map_git(username, repo):
-    action = GitHubAction(username, repo)
-    return action.get_latest
-
-
-def _map(integration):
-    action = {
-        Integration.GITHUB: _map_git(integration['username'],
-                                     integration['repo']),
-    }
-    return {
-        'type': Integration[integration['type']],
-        'action': action.get(Integration[integration['type']])
-    }
+    def _map(self, integration):
+        integration_type = Integration[integration['type']]
+        return self.available_integrations[integration_type](
+            integration['username'],
+            integration['repo']).get_latest
 
 
 class MismatchError(Exception):

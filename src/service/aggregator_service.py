@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import asyncio
 import enum
 import src.ci_gateway.constants as ci_constants
 
@@ -21,10 +22,11 @@ class AggregatorService(object):
         self.integrations = integrations
 
     async def run(self):
-        tasks = [integration['action']() for integration in self.integrations]
+        tasks = [integration() for integration in self.integrations]
+        done, pending = await asyncio.wait(tasks)
 
         result = []
-        [result.append(await task) for task in tasks]
+        [result.append(future.result()) for future in done]
 
         return dict(
             type="AGGREGATED",

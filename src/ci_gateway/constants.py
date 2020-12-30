@@ -13,3 +13,4 @@ class Result(enum.Enum):
 
 class Integration(enum.Enum):
     GITHUB = "GITHUB"
+    CIRCLECI = "CIRCLE_CI"

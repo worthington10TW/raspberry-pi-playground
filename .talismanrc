@@ -3,5 +3,7 @@ fileignoreconfig:
   checksum: 0379fd8bfdced783f2f8111870234599232e352473d396b6e6805e7e0df434e8
 - filename: app/ci_gateway/github.py
   checksum: a33e9f8771bb469fc5aaffd2fdd1f3e8b55e407e5ca2452f6a04a1327a8af731
+- filename: test/ci_gateway/circleci_response.json
+  checksum: 1867f91182143b68b1b82d5770b5a9c79662b90f953298e855845645a9ca0afe
 
 
