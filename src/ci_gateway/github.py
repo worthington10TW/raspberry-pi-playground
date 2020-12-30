@@ -1,16 +1,15 @@
 import sys
 import os
 import logging
-from src.ci_gateway.constants import Integration, Result
+from src.ci_gateway.constants import Integration, Result, APIError
 from aiohttp import ClientSession
 import asyncio
-from src.ci_gateway.api_error import APIError
 
 
 class GitHubAction(object):
-    def __init__(self, username, repo):
-        self.username = username
-        self.repo = repo
+    def __init__(self, **kwargs):
+        self.username = kwargs.get('username')
+        self.repo = kwargs.get('repo')
         self.token = os.getenv('GITHUB_TOKEN')
 
     async def get_latest(self):

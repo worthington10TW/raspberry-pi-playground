@@ -5,56 +5,42 @@ import asyncio
 import json
 import os
 from gpio.board import Board
-from gpio.constants import Lights
-from service.aggregator_service import AggregatorService, Result
+from service.aggregator_service import AggregatorService
 from service.integration_mapper import IntegrationMapper
 from ci_gateway import integrations as available_integrations
 from log_handler import setup_logger
+from src.build_monitor import BuildMonitor
 
 
 async def main():
     setup_logger()
-    logging.info("Hello World!")
-
-    aggregator = AggregatorService(get_integrations())
+    logging.info("Hello build monitor!")
 
     with Board() as board:
+        logging.info("Board initialised")
+
+        config = get_config()
+        poll_in_seconds = config['poll_in_seconds']
+        integrations = config['integrations']
+        logging.info(f'Polling increment (in seconds): {poll_in_seconds}')
+        logging.info(f'Integrations: {integrations}')
+
+        aggregator = AggregatorService(
+            IntegrationMapper(
+                available_integrations.get_all()).get(
+                integrations))
+        monitor = BuildMonitor(board, aggregator)
         while True:
-            board.on(Lights.BLUE)
-            result = await aggregator.run()
-            status = result['status']
-            is_running = result['is_running']
-            board.off(Lights.BLUE)
-
-            if status == Result.PASS:
-                board.on(Lights.GREEN)
-                board.off(Lights.RED)
-            elif status == Result.FAIL:
-                board.off(Lights.GREEN)
-                board.on(Lights.RED)
-            elif status == Result.UNKNOWN:
-                board.on(Lights.GREEN)
-                board.on(Lights.RED)
-            else:
-                board.off(Lights.GREEN)
-                board.off(Lights.RED)
-
-            if is_running:
-                await board.pulse(Lights.YELLOW)
-            else:
-                board.off(Lights.YELLOW)
-
-            await asyncio.sleep(30)
+            await monitor.run()
+            await asyncio.sleep(poll_in_seconds)
 
 
-def get_integrations():
-    RESPONSE_JSON = os.path.join(
+def get_config():
+    response_json = os.path.join(
         os.path.dirname(__file__),
         'integrations.conf')
-    with open(RESPONSE_JSON) as integrations:
-        data = json.load(integrations)
-
-    return IntegrationMapper(available_integrations.get_all()).get(data)
+    with open(response_json) as integrations:
+        return json.load(integrations)
 
 
 if __name__ == "__main__":

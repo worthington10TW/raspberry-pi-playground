@@ -98,7 +98,8 @@ class GithubTests(aiounittest.AsyncTestCase):
         m.get('https://api.github.com/repos/super-man/awesome/actions/runs',  # noqa: E501
               payload=data, status=200)
 
-        action = GitHubAction('super-man', 'awesome')
+        action = GitHubAction(**{'username': 'super-man',
+                                 'repo': 'awesome'})
         result = await action.get_latest()
 
         self.assertEqual(Integration.GITHUB, result["type"])
@@ -110,7 +111,8 @@ class GithubTests(aiounittest.AsyncTestCase):
             m.get('https://api.github.com/repos/super-man/awesome/actions/runs',  # noqa: E501
                   body='',
                   status=400)
-            action = GitHubAction('super-man', 'awesome')
+            action = GitHubAction(**{'username': 'super-man',
+                                     'repo': 'awesome'})
             await action.get_latest()
 
         msg = "APIError: GET https://api.github.com/repos/super-man/awesome/actions/runs 400"  # noqa: E501

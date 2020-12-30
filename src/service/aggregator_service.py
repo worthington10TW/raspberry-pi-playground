@@ -5,7 +5,7 @@ import enum
 import src.ci_gateway.constants as ci_constants
 
 
-def get_status(result):
+def get_status(result: dict):
     if len(result) == 0:
         return Result.NONE
     elif any(r['status'] == ci_constants.Result.FAIL for r in result):
@@ -18,7 +18,7 @@ def get_status(result):
 
 
 class AggregatorService(object):
-    def __init__(self, integrations):
+    def __init__(self, integrations: dict):
         self.integrations = integrations
 
     async def run(self):
@@ -30,7 +30,6 @@ class AggregatorService(object):
 
         return dict(
             type="AGGREGATED",
-            start=None,
             is_running=True
             if any(r['status'] == ci_constants.Result.RUNNING for r in result)
             else False,

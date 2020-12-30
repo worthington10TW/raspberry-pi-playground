@@ -17,8 +17,7 @@ class IntegrationMapper(object):
     def _map(self, integration):
         integration_type = Integration[integration['type']]
         return self.available_integrations[integration_type](
-            integration['username'],
-            integration['repo']).get_latest
+            **integration).get_latest
 
 
 class MismatchError(Exception):

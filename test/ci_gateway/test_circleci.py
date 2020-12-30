@@ -57,7 +57,7 @@ class CircleCiTests(aiounittest.AsyncTestCase):
         self.assertEqual(Result.FAIL, result["status"])
 
     @aioresponses()
-    async def test_gets_latest_from_git(self, m):
+    async def test_gets_latest_from_circle(self, m):
         RESPONSE_JSON = os.path.join(
             os.path.dirname(__file__),
             'circleci_response.json')
@@ -67,7 +67,8 @@ class CircleCiTests(aiounittest.AsyncTestCase):
         m.get('https://circleci.com/api/v1.1/project/github/super-man/awesome?limit=1&shallow=true',  # noqa: E501
               payload=data, status=200)
 
-        action = CircleCI('super-man', 'awesome')
+        action = CircleCI(**{'username': 'super-man',
+                             'repo': 'awesome'})
         result = await action.get_latest()
         self.assertEqual(Integration.CIRCLECI, result["type"])
         self.assertEqual(Result.PASS, result["status"])
@@ -78,7 +79,8 @@ class CircleCiTests(aiounittest.AsyncTestCase):
             m.get(
                 'https://circleci.com/api/v1.1/project/github/super-man/awesome?limit=1&shallow=true',  # noqa: E501
                 status=400)
-            action = CircleCI('super-man', 'awesome')
+            action = CircleCI(**{'username': 'super-man',
+                                 'repo': 'awesome'})
             await action.get_latest()
 
         msg = "APIError: GET https://circleci.com/api/v1.1/project/github/super-man/awesome?limit=1&shallow=true 400"  # noqa: E501
