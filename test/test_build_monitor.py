@@ -69,18 +69,6 @@ class BuildMonitorTests(aiounittest.AsyncTestCase):
         self.assertEqual(call(Lights.GREEN), self.board.on.call_args_list[1])
         self.assertEqual(call(Lights.RED), self.board.on.call_args_list[2])
 
-    async def test_on_empty_turn_lights_off(self):
-        self.aggregator.run.return_value = dict(
-            is_running=False,
-            status=None)
-        monitor = BuildMonitor(self.board, self.aggregator)
-        self.assertFalse(self.board.on.called)
-
-        await monitor.run()
-
-        self.assertEqual(call(Lights.GREEN), self.board.off.call_args_list[1])
-        self.assertEqual(call(Lights.RED), self.board.off.call_args_list[2])
-
     async def test_pulse_when_running(self):
         self.aggregator.run.return_value = dict(
             is_running=True,
