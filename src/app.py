@@ -4,6 +4,7 @@ import logging
 import asyncio
 import json
 import os
+import pprint
 from gpio.board import Board
 from service.aggregator_service import AggregatorService
 from service.integration_mapper import IntegrationMapper
@@ -23,7 +24,7 @@ async def main():
         poll_in_seconds = config['poll_in_seconds']
         integrations = config['integrations']
         logging.info(f'Polling increment (in seconds): {poll_in_seconds}')
-        logging.info(f'Integrations: {integrations}')
+        logging.info(f'Integrations: {pprint.pformat(integrations)}')
 
         aggregator = AggregatorService(
             IntegrationMapper(
