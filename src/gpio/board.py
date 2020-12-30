@@ -25,7 +25,7 @@ class Board(object):
                 light.value,
                 self.GPIO.OUT,
                 initial=self.GPIO.LOW)
-            self.pwm[light] = self.GPIO.PWM(
+            self.pwm[light.value] = self.GPIO.PWM(
                 light.value,
                 100)
 
@@ -33,27 +33,31 @@ class Board(object):
 
         return self
 
-    def on(self, light):
+    def on(self, light: Lights):
         logging.debug(f'Light {light} turning on...')
         self.GPIO.output(light.value, self.GPIO.HIGH)
         logging.debug(f'Light {light} on')
 
-    async def pulse(self, light):
+    async def pulse(self, light: Lights):
         if light in self.tasks:
             logging.debug(f'Light {light} is already pulsing.')
             return
 
         dc = 0
-        pwm = self.pwm[light]
+        pwm = self.pwm.get(light.value)
+        if pwm is None:
+            logging.error(f'Failed to pulse light {light}')
+            return
+
         pwm.start(dc)
 
         self.tasks[light] = asyncio.ensure_future(pulse(pwm))
         logging.debug(f'Light {light} pulsing...')
         await asyncio.sleep(0.001)
 
-    def off(self, light):
-        if light in self.pwm:
-            self.pwm[light].stop()
+    def off(self, light: Lights):
+        if light.value in self.pwm:
+            self.pwm[light.value].stop()
         if light in self.tasks:
             self.tasks[light].cancel()
             del self.tasks[light]
