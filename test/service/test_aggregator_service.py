@@ -7,15 +7,16 @@ import src.ci_gateway.constants as github_constants
 
 
 async def return_pass():
-    return dict(status=github_constants.Result.PASS)
+    return dict(status=github_constants.Result.PASS),\
+           dict(status=github_constants.Result.PASS)
 
 
 async def return_fail():
-    return dict(status=github_constants.Result.FAIL)
+    return dict(status=github_constants.Result.FAIL),
 
 
 async def return_running():
-    return dict(status=github_constants.Result.RUNNING)
+    return dict(status=github_constants.Result.RUNNING),
 
 
 class AggregatorServiceTests(aiounittest.AsyncTestCase):

@@ -26,7 +26,11 @@ class AggregatorService(object):
         done, pending = await asyncio.wait(tasks)
 
         result = []
-        [result.append(future.result()) for future in done]
+        [result.extend(future.result()) for future in done]
+
+        print('')
+        print(result)
+        print('')
 
         return dict(
             type="AGGREGATED",

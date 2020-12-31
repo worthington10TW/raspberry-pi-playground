@@ -1,9 +1,7 @@
-import sys
 import os
 import logging
 from src.ci_gateway.constants import Integration, Result, APIError
 from aiohttp import ClientSession
-import asyncio
 
 
 class GitHubAction(object):
@@ -31,7 +29,7 @@ class GitHubAction(object):
         response = GitHubAction.map_result(latest)
         logging.info(f'Called {url}')
         logging.info(f'Response {response}')
-        return response
+        return response,
 
     @staticmethod
     def map_result(latest):
@@ -48,13 +46,29 @@ class GitHubAction(object):
 
 
 if __name__ == "__main__":
+    import argparse
+    import sys
+    import asyncio
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--username', help='repo username')
+    parser.add_argument('--repo', help='repo to query')
+
+    args = parser.parse_args()
+
     screen_handler = logging.StreamHandler(stream=sys.stdout)
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
     logger.addHandler(screen_handler)
 
     loop = asyncio.get_event_loop()
-    task = GitHubAction(sys.argv[1], sys.argv[2]).get_latest()
+    task = GitHubAction(
+        **{
+            'username': args.username,
+            'repo': args.repo
+        }).get_latest()
     done, pending = loop.run_until_complete(asyncio.wait((task,)))
-    value = done[0].future.result()
-    print(value)
+    for future in done:
+        value = future.result()
+        print(value)

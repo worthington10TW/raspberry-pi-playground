@@ -89,10 +89,10 @@ class GithubTests(aiounittest.AsyncTestCase):
 
     @aioresponses()
     async def test_gets_latest_from_git(self, m):
-        RESPONSE_JSON = os.path.join(
+        response_json = os.path.join(
             os.path.dirname(__file__),
             'github_response.json')
-        with open(RESPONSE_JSON) as json_file:
+        with open(response_json) as json_file:
             data = json.load(json_file)
 
         m.get('https://api.github.com/repos/super-man/awesome/actions/runs',  # noqa: E501
@@ -102,8 +102,8 @@ class GithubTests(aiounittest.AsyncTestCase):
                                  'repo': 'awesome'})
         result = await action.get_latest()
 
-        self.assertEqual(Integration.GITHUB, result["type"])
-        self.assertEqual(Result.FAIL, result["status"])
+        self.assertEqual(Integration.GITHUB, result[0]["type"])
+        self.assertEqual(Result.FAIL, result[0]["status"])
 
     @aioresponses()
     async def test_fails_when_not_200(self, m):
