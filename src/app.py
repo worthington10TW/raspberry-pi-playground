@@ -14,14 +14,13 @@ from src.build_monitor import BuildMonitor
 
 
 async def main():
-    setup_logger()
+    config = get_config()
+    setup_logger(config.get('log_level'))
     logging.info("Hello build monitor!")
 
     with Board() as board:
         logging.info("Board initialised")
-
-        config = get_config()
-        poll_in_seconds = config['poll_in_seconds']
+        poll_in_seconds = config.get('poll_in_seconds') or 30
         integrations = config['integrations']
         logging.info(f'Polling increment (in seconds): {poll_in_seconds}')
         logging.info(f'Integrations: {pprint.pformat(integrations)}')
