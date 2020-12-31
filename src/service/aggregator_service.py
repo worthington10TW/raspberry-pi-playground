@@ -28,10 +28,6 @@ class AggregatorService(object):
         result = []
         [result.extend(future.result()) for future in done]
 
-        print('')
-        print(result)
-        print('')
-
         return dict(
             type="AGGREGATED",
             is_running=True

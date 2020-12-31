@@ -1,5 +1,7 @@
 import os
 import logging
+from itertools import groupby
+
 from src.ci_gateway.constants import Integration, Result, APIError
 from aiohttp import ClientSession
 
@@ -9,6 +11,7 @@ class GitHubAction(object):
         self.username = kwargs.get('username')
         self.repo = kwargs.get('repo')
         self.token = os.getenv('GITHUB_TOKEN')
+        self.excluded_workflows = kwargs.get('excluded_workflows') or []
 
     async def get_latest(self):
         base = 'https://api.github.com'
@@ -25,11 +28,14 @@ class GitHubAction(object):
                 raise APIError('GET', url, resp.status)
 
             json = await resp.json()
-        latest = json['workflow_runs'][0]
-        response = GitHubAction.map_result(latest)
+
+        response = list(
+            map(
+                GitHubAction.map_result,
+                self.get_unique_latest_jobs(json['workflow_runs'])))
         logging.info(f'Called {url}')
         logging.info(f'Response {response}')
-        return response,
+        return response
 
     @staticmethod
     def map_result(latest):
@@ -37,12 +43,27 @@ class GitHubAction(object):
         status = latest["status"]
         return dict(
             type=Integration.GITHUB,
+            vcs=latest["html_url"],
             id=latest["id"],
+            name=latest["name"],
             start=latest["created_at"],
             status=Result.FAIL if status == "completed" and conclusion == "failure" else  # noqa: E501
             Result.PASS if status == "completed" and conclusion == "success" else  # noqa: E501
             Result.RUNNING if conclusion is None and (status == "queued" or status == "in_progress") else  # noqa: E501
             Result.UNKNOWN)
+
+    def get_unique_latest_jobs(self, json):
+        jobs = []
+        for k, g in groupby(
+                sorted(
+                    filter(
+                        lambda x: x['name']
+                        not in self.excluded_workflows,
+                        json), key=lambda x: x['name']),
+                lambda x: x['name']):
+            jobs.append(list(g)[0])
+
+        return jobs
 
 
 if __name__ == "__main__":
@@ -63,10 +84,12 @@ if __name__ == "__main__":
     logger.addHandler(screen_handler)
 
     loop = asyncio.get_event_loop()
+    args.excluded_workflows = args.excluded_workflows or []
     task = GitHubAction(
         **{
             'username': args.username,
-            'repo': args.repo
+            'repo': args.repo,
+            'excluded_workflows': args.excluded_workflows
         }).get_latest()
     done, pending = loop.run_until_complete(asyncio.wait((task,)))
     for future in done:

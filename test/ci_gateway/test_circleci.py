@@ -20,7 +20,8 @@ class CircleCiTests(aiounittest.AsyncTestCase):
             "start_time": "2020-12-28T09:23:57Z",
             "workflows": {
                 "workflow_name": "blah"
-            }
+            },
+            "vcs_url": "http://superurl.com"
         }"""
         result = CircleCI.map_result(json.loads(latest))
         self.assertEqual(Integration.CIRCLECI, result["type"])
@@ -28,6 +29,7 @@ class CircleCiTests(aiounittest.AsyncTestCase):
         self.assertEqual("2020-12-28T09:23:57Z", result["start"])
         self.assertEqual("2020-12-28T09:23:57Z", result["start"])
         self.assertEqual("blah", result["name"])
+        self.assertEqual("http://superurl.com", result["vcs"])
         self.assertEqual(1234, result["id"])
 
     def test_running(self):
@@ -38,7 +40,8 @@ class CircleCiTests(aiounittest.AsyncTestCase):
                     "start_time": "2020-12-28T09:23:57Z",
                     "workflows": {
                         "workflow_name": "blah"
-                    }
+                    },
+                    "vcs_url": "http://superurl.com"
                 }"""
         result = CircleCI.map_result(json.loads(latest))
         self.assertEqual(Result.RUNNING, result["status"])
@@ -51,7 +54,8 @@ class CircleCiTests(aiounittest.AsyncTestCase):
                     "start_time": "2020-12-28T09:23:57Z",
                     "workflows": {
                         "workflow_name": "blah"
-                    }
+                    },
+                    "vcs_url": "http://superurl.com"
                 }"""
         result = CircleCI.map_result(json.loads(latest))
         self.assertEqual(Result.PASS, result["status"])
@@ -64,7 +68,8 @@ class CircleCiTests(aiounittest.AsyncTestCase):
                     "start_time": "2020-12-28T09:23:57Z",
                     "workflows": {
                         "workflow_name": "blah"
-                    }
+                    },
+                    "vcs_url": "http://superurl.com"
                 }"""
         result = CircleCI.map_result(json.loads(latest))
         self.assertEqual(Result.FAIL, result["status"])

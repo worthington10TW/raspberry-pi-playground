@@ -11,9 +11,7 @@ class CircleCI(object):
         self.username = kwargs.get('username')
         self.repo = kwargs.get('repo')
         self.token = os.getenv('CIRCLE_CI_TOKEN')
-        self.excluded_workflows = [] \
-            if 'excluded_workflows' not in kwargs \
-            else kwargs.get('excluded_workflows')
+        self.excluded_workflows = kwargs.get('excluded_workflows') or []
 
     async def get_latest(self):
         base = 'https://circleci.com/api/v1.1'
@@ -46,6 +44,7 @@ class CircleCI(object):
         lifecycle = latest["lifecycle"]
         return dict(
             type=Integration.CIRCLECI,
+            vcs=latest["vcs_url"],
             id=latest["build_num"],
             name=latest['workflows']['workflow_name'],
             start=latest["start_time"],
@@ -63,7 +62,6 @@ class CircleCI(object):
                         json), key=lambda x: x['workflows']['workflow_name']),
                 lambda x: x['workflows']['workflow_name']):
             jobs.append(list(g)[0])
-            print(k)
 
         return jobs
 

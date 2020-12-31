@@ -19,20 +19,26 @@ class GithubTests(aiounittest.AsyncTestCase):
             "id": 448533827,
             "status": "completed",
             "conclusion": "success",
-            "created_at": "2020-12-28T09:23:57Z"
+            "created_at": "2020-12-28T09:23:57Z",
+            "html_url": "http://super-thing.com",
+            "name": "amazing-workflow"
         }"""
         result = GitHubAction.map_result(json.loads(latest))
         self.assertEqual(Integration.GITHUB, result["type"])
         self.assertEqual(Result.PASS, result["status"])
         self.assertEqual("2020-12-28T09:23:57Z", result["start"])
         self.assertEqual(448533827, result["id"])
+        self.assertEqual("amazing-workflow", result["name"])
+        self.assertEqual("http://super-thing.com", result["vcs"])
 
     def test_running(self):
         latest = """{
             "id": 448533827,
             "status": "in_progress",
             "conclusion": null,
-            "created_at": "2020-12-28T09:23:57Z"
+            "created_at": "2020-12-28T09:23:57Z",
+            "html_url": "http://super-thing.com",
+            "name": "amazing-workflow"
         }"""
         result = GitHubAction.map_result(json.loads(latest))
         self.assertEqual(Result.RUNNING, result["status"])
@@ -42,7 +48,9 @@ class GithubTests(aiounittest.AsyncTestCase):
             "id": 448533827,
             "status": "queued",
             "conclusion": null,
-            "created_at": "2020-12-28T09:23:57Z"
+            "created_at": "2020-12-28T09:23:57Z",
+            "html_url": "http://super-thing.com",
+            "name": "amazing-workflow"
         }"""
         result = GitHubAction.map_result(json.loads(latest))
         self.assertEqual(Result.RUNNING, result["status"])
@@ -52,7 +60,9 @@ class GithubTests(aiounittest.AsyncTestCase):
             "id": 448533827,
             "status": "completed",
             "conclusion": "success",
-            "created_at": "2020-12-28T09:23:57Z"
+            "created_at": "2020-12-28T09:23:57Z",
+            "html_url": "http://super-thing.com",
+            "name": "amazing-workflow"
         }"""
         result = GitHubAction.map_result(json.loads(latest))
         self.assertEqual(Result.PASS, result["status"])
@@ -62,7 +72,9 @@ class GithubTests(aiounittest.AsyncTestCase):
             "id": 448533827,
             "status": "completed",
             "conclusion": "failure",
-            "created_at": "2020-12-28T09:23:57Z"
+            "created_at": "2020-12-28T09:23:57Z",
+            "html_url": "http://super-thing.com",
+            "name": "amazing-workflow"
         }"""
         result = GitHubAction.map_result(json.loads(latest))
         self.assertEqual(Result.FAIL, result["status"])
@@ -72,7 +84,9 @@ class GithubTests(aiounittest.AsyncTestCase):
             "id": 448533827,
             "status": "something",
             "conclusion": null,
-            "created_at": "2020-12-28T09:23:57Z"
+            "created_at": "2020-12-28T09:23:57Z",
+            "html_url": "http://super-thing.com",
+            "name": "amazing-workflow"
         }"""
         result = GitHubAction.map_result(json.loads(latest))
         self.assertEqual(Result.UNKNOWN, result["status"])
@@ -82,7 +96,9 @@ class GithubTests(aiounittest.AsyncTestCase):
             "id": 448533827,
             "status": "something",
             "conclusion": "completed",
-            "created_at": "2020-12-28T09:23:57Z"
+            "created_at": "2020-12-28T09:23:57Z",
+            "html_url": "http://super-thing.com",
+            "name": "amazing-workflow"
         }"""
         result = GitHubAction.map_result(json.loads(latest))
         self.assertEqual(Result.UNKNOWN, result["status"])
@@ -103,6 +119,10 @@ class GithubTests(aiounittest.AsyncTestCase):
         result = await action.get_latest()
 
         self.assertEqual(Integration.GITHUB, result[0]["type"])
+        self.assertEqual("CI", result[0]["name"])
+        self.assertEqual(
+            "https://github.com/worthington10TW/raspberry-pi-playground/actions/runs/448533827",  # noqa: E501
+            result[0]["vcs"])
         self.assertEqual(Result.FAIL, result[0]["status"])
 
     @aioresponses()
