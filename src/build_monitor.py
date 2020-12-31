@@ -21,13 +21,13 @@ class BuildMonitor(object):
         self.board.off(Lights.BLUE)
 
         logging.info(f'Setting output {result}')
-        if status == Result.PASS:
+        if status.value == Result.PASS.value:
             self.board.on(Lights.GREEN)
             self.board.off(Lights.RED)
-        elif status == Result.FAIL:
+        elif status.value == Result.FAIL.value:
             self.board.off(Lights.GREEN)
             self.board.on(Lights.RED)
-        elif status == Result.UNKNOWN:
+        elif status.value == Result.UNKNOWN.value:
             self.board.on(Lights.GREEN)
             self.board.on(Lights.RED)
 
