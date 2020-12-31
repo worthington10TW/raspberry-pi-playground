@@ -9,5 +9,3 @@ aiounittest~=1.4.0
 aiohttp~=3.7.3
 aioresponses~=0.7.1
 mock~=4.0.3
-src~=0.1.0
-pandas~=1.2.0
