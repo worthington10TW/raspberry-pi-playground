@@ -2,11 +2,12 @@ import os
 import logging
 from itertools import groupby
 
-from src.ci_gateway.constants import Integration, Result, APIError
+from src.ci_gateway.constants import \
+    Integration, Result, APIError, IntegrationAdapter
 from aiohttp import ClientSession
 
 
-class CircleCI(object):
+class CircleCI(IntegrationAdapter):
     def __init__(self, **kwargs):
         self.username = kwargs.get('username')
         self.repo = kwargs.get('repo')
@@ -14,6 +15,7 @@ class CircleCI(object):
         self.excluded_workflows = kwargs.get('excluded_workflows') or []
 
     async def get_latest(self):
+        super().get_latest()
         base = 'https://circleci.com/api/v1.1'
         url = f'{base}/project/github/{self.username}/{self.repo}?shallow=true'  # noqa: E501
         logging.debug(f'Calling {url}')

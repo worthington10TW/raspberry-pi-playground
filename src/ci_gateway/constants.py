@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 
 import enum
+from abc import abstractmethod, ABC
+import logging
+
+
+class IntegrationAdapter(ABC):
+    @abstractmethod
+    def get_latest(self):
+        logging.info(f'Initiating integration {self}')
+        pass
 
 
 class Result(enum.Enum):

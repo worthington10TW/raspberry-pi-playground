@@ -2,11 +2,12 @@ import os
 import logging
 from itertools import groupby
 
-from src.ci_gateway.constants import Integration, Result, APIError
+from src.ci_gateway.constants import \
+    Integration, Result, APIError, IntegrationAdapter
 from aiohttp import ClientSession
 
 
-class GitHubAction(object):
+class GitHubAction(IntegrationAdapter):
     def __init__(self, **kwargs):
         self.username = kwargs.get('username')
         self.repo = kwargs.get('repo')
@@ -14,6 +15,7 @@ class GitHubAction(object):
         self.excluded_workflows = kwargs.get('excluded_workflows') or []
 
     async def get_latest(self):
+        super().get_latest()
         base = 'https://api.github.com'
         url = f'{base}/repos/{self.username}/{self.repo}/actions/runs'
 
