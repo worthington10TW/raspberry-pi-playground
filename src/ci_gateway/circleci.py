@@ -2,8 +2,8 @@ import os
 import logging
 from itertools import groupby
 
-from src.ci_gateway.constants import \
-    Integration, Result, APIError, IntegrationAdapter
+from src.ci_gateway.constants import Integration, \
+    APIError, IntegrationAdapter, CiResult
 from aiohttp import ClientSession
 
 
@@ -50,9 +50,9 @@ class CircleCI(IntegrationAdapter):
             id=latest["build_num"],
             name=latest['workflows']['workflow_name'],
             start=latest["start_time"],
-            status=Result.RUNNING if lifecycle != "finished" else
-            Result.FAIL if outcome != "success" else  # noqa: E501
-            Result.PASS)
+            status=CiResult.RUNNING if lifecycle != "finished" else
+            CiResult.FAIL if outcome != "success" else  # noqa: E501
+            CiResult.PASS)
 
     def get_unique_latest_jobs(self, json):
         jobs = []

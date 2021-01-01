@@ -1,11 +1,12 @@
 fileignoreconfig:
-- filename: src/ci_gateway/github.py
-  checksum: 29baaa51fc6c6ba00cc2e161e817b62f925114d4bad3e6c99da4e02c970cdbf1
 - filename: test/ci_gateway/circleci_response.json
   checksum: fcd4d707fc4a86516e69f0fba794edd04a9d3a6132693200920fe133a25d4e19
 - filename: src/ci_gateway/circleci.py
   checksum: f990d11cfba8f7d09d17a8bbd6d1ebb6831dc9eac7dc789cac4e93b292d4a06c
-
+- filename: src/build_monitor.py
+  checksum: e9e6273f3d1426e472246cc7c4feba691d6bfac73915989d7f98a7a92cfad596
+- filename: src/ci_gateway/github.py
+  checksum: 0b9c4b483b3569489ef6fd26072096868b5291b2d07e60b02748a84cd2f6af95
 
 
 

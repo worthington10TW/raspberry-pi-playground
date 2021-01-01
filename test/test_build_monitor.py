@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from unittest.mock import MagicMock, call
 import aiounittest
+
 from src.build_monitor import BuildMonitor
 from src.gpio.constants import Lights
 from src.service.aggregator_service import Result
@@ -15,7 +16,7 @@ class BuildMonitorTests(aiounittest.AsyncTestCase):
     def setUp(self):
         self.board = MagicMock()
         self.board.on = MagicMock()
-        self. board.pulse = AsyncMock()
+        self.board.pulse = AsyncMock()
         self.board.off = MagicMock()
         self.aggregator = AsyncMock()
         self.aggregator.run = AsyncMock()

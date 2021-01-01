@@ -25,6 +25,7 @@ class Board(object):
                 light.value,
                 self.GPIO.OUT,
                 initial=self.GPIO.LOW)
+
             self.pwm[light.value] = self.GPIO.PWM(
                 light.value,
                 100)
@@ -70,9 +71,9 @@ class Board(object):
         logging.debug(f'Light {light} off')
 
     def __exit__(self, type, value, traceback):
-        logging.info('Cleaning up pulses')
-        [task.cancel() for task in self.tasks]
-        del self.tasks
+        # logging.info('Cleaning up pulses')
+        # [task.cancel() for task in self.tasks]
+        # del self.tasks
 
         logging.info('Cleaning up GPIO')
         self.GPIO.cleanup()

@@ -8,7 +8,7 @@ import aiounittest
 from aioresponses import aioresponses
 
 from src.ci_gateway.github import GitHubAction, APIError
-from src.ci_gateway.constants import Result, Integration
+from src.ci_gateway.constants import CiResult as Result, Integration
 
 os.environ['GITHUB_TOKEN'] = 'secret'
 

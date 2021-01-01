@@ -21,15 +21,18 @@ class BuildMonitor(object):
         self.board.off(Lights.BLUE)
 
         logging.info(f'Setting output {result}')
-        if status.value == Result.PASS.value:
+        if Result.PASS == status:
             self.board.on(Lights.GREEN)
             self.board.off(Lights.RED)
-        elif status.value == Result.FAIL.value:
+        elif Result.FAIL == status:
             self.board.off(Lights.GREEN)
             self.board.on(Lights.RED)
-        elif status.value == Result.UNKNOWN.value:
+        elif Result.UNKNOWN == status:
             self.board.on(Lights.GREEN)
             self.board.on(Lights.RED)
+        else:
+            self.board.off(Lights.GREEN)
+            self.board.off(Lights.RED)
 
         if is_running:
             await self.board.pulse(Lights.YELLOW)

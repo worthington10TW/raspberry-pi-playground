@@ -8,10 +8,10 @@ import src.ci_gateway.constants as ci_constants
 def get_status(result: dict):
     if len(result) == 0:
         return Result.NONE
-    elif any(r['status'] == ci_constants.Result.FAIL for r in result):
+    elif any(r['status'] == ci_constants.CiResult.FAIL for r in result):
         return Result.FAIL
 
-    elif all(r['status'] == ci_constants.Result.PASS for r in result):
+    elif all(r['status'] == ci_constants.CiResult.PASS for r in result):
         return Result.PASS
     else:
         return Result.UNKNOWN
@@ -31,12 +31,14 @@ class AggregatorService(object):
         return dict(
             type="AGGREGATED",
             is_running=True
-            if any(r['status'] == ci_constants.Result.RUNNING for r in result)
+            if any(
+                r['status'] == ci_constants.CiResult.RUNNING for r in result)
             else False,
             status=get_status(
                 list(
                     filter(
-                        lambda x: x['status'] != ci_constants.Result.RUNNING,
+                        lambda x:
+                        x['status'] != ci_constants.CiResult.RUNNING,
                         result))))
 
 
@@ -45,3 +47,6 @@ class Result(enum.Enum):
     FAIL = "FAIL"
     UNKNOWN = "UNKNOWN"
     NONE = "NONE"
+
+    def __eq__(self, other):
+        return self.value == other.value

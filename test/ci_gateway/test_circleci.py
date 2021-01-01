@@ -6,7 +6,7 @@ import os
 import aiounittest
 from aioresponses import aioresponses
 from src.ci_gateway.circleci import CircleCI, APIError
-from src.ci_gateway.constants import Result, Integration
+from src.ci_gateway.constants import CiResult as Result, Integration
 
 os.environ['CIRCLECI_TOKEN'] = 'secret'
 

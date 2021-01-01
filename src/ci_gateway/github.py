@@ -3,7 +3,7 @@ import logging
 from itertools import groupby
 
 from src.ci_gateway.constants import \
-    Integration, Result, APIError, IntegrationAdapter
+    Integration, CiResult, APIError, IntegrationAdapter
 from aiohttp import ClientSession
 
 
@@ -49,10 +49,10 @@ class GitHubAction(IntegrationAdapter):
             id=latest["id"],
             name=latest["name"],
             start=latest["created_at"],
-            status=Result.FAIL if status == "completed" and conclusion == "failure" else  # noqa: E501
-            Result.PASS if status == "completed" and conclusion == "success" else  # noqa: E501
-            Result.RUNNING if conclusion is None and (status == "queued" or status == "in_progress") else  # noqa: E501
-            Result.UNKNOWN)
+            status=CiResult.FAIL if status == "completed" and conclusion == "failure" else  # noqa: E501
+            CiResult.PASS if status == "completed" and conclusion == "success" else  # noqa: E501
+            CiResult.RUNNING if conclusion is None and (status == "queued" or status == "in_progress") else  # noqa: E501
+            CiResult.UNKNOWN)
 
     def get_unique_latest_jobs(self, json):
         jobs = []

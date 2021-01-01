@@ -12,12 +12,15 @@ class IntegrationAdapter(ABC):
         pass
 
 
-class Result(enum.Enum):
+class CiResult(enum.Enum):
     PASS = "PASS"
     FAIL = "FAIL"
     RUNNING = "RUNNING"
     UNKNOWN = "UNKNOWN"
     NONE = "NONE"
+
+    def __eq__(self, other):
+        return self.value == other.value
 
 
 class Integration(enum.Enum):
