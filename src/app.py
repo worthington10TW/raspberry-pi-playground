@@ -16,10 +16,10 @@ from src.build_monitor import BuildMonitor
 async def main(level):
     config = get_config()
     setup_logger(level)
-    logging.info("Hello build monitor!")
+    logging.info('Hello build monitor!')
 
     with Board() as board:
-        logging.info("Board initialised")
+        logging.info('Board initialised')
         poll_in_seconds = config.get('poll_in_seconds') or 30
         integrations = config['integrations']
         logging.info(f'Polling increment (in seconds): {poll_in_seconds}')
@@ -43,34 +43,30 @@ def get_config():
         return json.load(integrations)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import argparse
-    import logging
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-log",
-        "--log",
-        default="info",
+        '-log',
+        default='info',
         help=(
-            "Provide logging level. "
-            "Example --log debug', default='warning'"),
+            'Provide logging level. '
+            'Example --log debug\', default=\'warning\''),
     )
 
     options = parser.parse_args()
-    levels = {
-    'critical': logging.CRITICAL,
-    'error': logging.ERROR,
-    'warn': logging.WARNING,
-    'warning': logging.WARNING,
-    'info': logging.INFO,
-    'debug': logging.DEBUG
-    }
+    levels = dict(critical=logging.CRITICAL,
+                  error=logging.ERROR,
+                  warn=logging.WARNING,
+                  warning=logging.WARNING,
+                  info=logging.INFO,
+                  debug=logging.DEBUG)
     level = levels.get(options.log.lower())
     if level is None:
         raise ValueError(
-            f"log level given: {options.log}"
-            f" -- must be one of: {' | '.join(levels.keys())}")
+            f'log level given: {options.log}'
+            f' -- must be one of: {" | ".join(levels.keys())}')
 
     loop = asyncio.get_event_loop()
     try:

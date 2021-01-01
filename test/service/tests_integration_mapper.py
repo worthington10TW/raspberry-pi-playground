@@ -11,13 +11,9 @@ from src.ci_gateway import integrations as available_integrations
 
 class IntegrationMapperTests(unittest.TestCase):
     def test_fails_when_integration_is_unknown(self):
-        integrations = [
-            {
-                'type': 'BLURGH',
-                'username': 'meee',
-                'repo': 'super-repo'
-            }
-        ]
+        integrations = {
+            dict(type='BLURGH', username='meee', repo='super-repo')
+        }
 
         with pytest.raises(MismatchError) as excinfo:
             IntegrationMapper(
@@ -27,18 +23,10 @@ class IntegrationMapperTests(unittest.TestCase):
         self.assertEqual(msg, str(excinfo.value))
 
     def test_maps_correct_function(self):
-        integrations = [
-            {
-                'type': 'GITHUB',
-                'username': 'meee',
-                'repo': 'super-repo'
-            },
-            {
-                'type': 'GITHUB',
-                'username': 'you',
-                'repo': 'another-repo'
-            }
-        ]
+        integrations = {
+            dict(type='GITHUB', username='meee', repo='super-repo'),
+            dict(type='GITHUB', username='you', repo='another-repo')
+        }
         result = IntegrationMapper(integrations, 1).get()
         self.assertEqual(2, len(result))
         [self.assertEqual(cons.Integration.GITHUB, r['type']) for r in result]
@@ -50,21 +38,9 @@ class IntegrationMapperTests(unittest.TestCase):
                                        mocked_git_action,
                                        mocked_circle_ci):
         integrations = [
-            {
-                'type': 'GITHUB',
-                'username': 'meee',
-                'repo': 'super-repo'
-            },
-            {
-                'type': 'GITHUB',
-                'username': 'you',
-                'repo': 'another-repo'
-            },
-            {
-                'type': 'CIRCLECI',
-                'username': 'them',
-                'repo': 'special-repo'
-            }
+            dict(type='GITHUB', username='meee', repo='super-repo'),
+            dict(type='GITHUB', username='you', repo='another-repo'),
+            dict(type='CIRCLECI', username='them', repo='special-repo')
         ]
 
         mocked_git_action.return_value.get_latest = mock.MagicMock()  # noqa: E501
