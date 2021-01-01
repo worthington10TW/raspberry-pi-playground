@@ -5,7 +5,6 @@ import sys
 
 
 def setup_logger(level):
-    level = logging.getLevelName(level or "INFO")
     formatter = logging.Formatter(
         fmt='%(asctime)s %(levelname)-8s %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S')

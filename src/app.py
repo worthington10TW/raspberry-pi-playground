@@ -13,9 +13,9 @@ from log_handler import setup_logger
 from src.build_monitor import BuildMonitor
 
 
-async def main():
+async def main(level):
     config = get_config()
-    setup_logger(config.get('log_level'))
+    setup_logger(level)
     logging.info("Hello build monitor!")
 
     with Board() as board:
@@ -44,8 +44,36 @@ def get_config():
 
 
 if __name__ == "__main__":
+    import argparse
+    import logging
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-log",
+        "--log",
+        default="info",
+        help=(
+            "Provide logging level. "
+            "Example --log debug', default='warning'"),
+    )
+
+    options = parser.parse_args()
+    levels = {
+    'critical': logging.CRITICAL,
+    'error': logging.ERROR,
+    'warn': logging.WARNING,
+    'warning': logging.WARNING,
+    'info': logging.INFO,
+    'debug': logging.DEBUG
+    }
+    level = levels.get(options.log.lower())
+    if level is None:
+        raise ValueError(
+            f"log level given: {options.log}"
+            f" -- must be one of: {' | '.join(levels.keys())}")
+
     loop = asyncio.get_event_loop()
     try:
-        loop.run_until_complete(main())
+        loop.run_until_complete(main(level))
     except KeyboardInterrupt:
         pass
