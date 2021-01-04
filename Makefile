@@ -19,4 +19,4 @@ debug: init
 
 .PHONY: run
 run: init
-	python3 src/app.py -O -log info
+	python3 -O src/app.py -log info &
