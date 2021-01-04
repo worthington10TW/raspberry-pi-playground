@@ -5,10 +5,20 @@ from abc import abstractmethod, ABC
 import logging
 
 
+class Integration(enum.Enum):
+    GITHUB = "GITHUB"
+    CIRCLECI = "CIRCLE_CI"
+
+
 class IntegrationAdapter(ABC):
+    @property
+    @abstractmethod
+    def get_type(self) -> Integration:
+        pass
+
     @abstractmethod
     def get_latest(self):
-        logging.info(f'Initiating integration {self}')
+        logging.info(f'Initiating integration {self.get_type()}')
         pass
 
 
@@ -21,11 +31,6 @@ class CiResult(enum.Enum):
 
     def __eq__(self, other):
         return self.value == other.value
-
-
-class Integration(enum.Enum):
-    GITHUB = "GITHUB"
-    CIRCLECI = "CIRCLE_CI"
 
 
 class APIError(Exception):

@@ -13,7 +13,10 @@ test: init
 install: init
 	pip3 install -e .
 
+.PHONY: debug
+debug: init
+	python3 src/app.py -log debug
+
 .PHONY: run
 run: init
-	python3 src/app.py
-
+	python3 src/app.py -O -log info

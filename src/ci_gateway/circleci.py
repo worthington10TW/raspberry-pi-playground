@@ -1,5 +1,6 @@
 import os
 import logging
+from abc import ABC
 from itertools import groupby
 
 from src.ci_gateway.constants import Integration, \
@@ -7,12 +8,15 @@ from src.ci_gateway.constants import Integration, \
 from aiohttp import ClientSession
 
 
-class CircleCI(IntegrationAdapter):
+class CircleCI(IntegrationAdapter, ABC):
     def __init__(self, **kwargs):
         self.username = kwargs.get('username')
         self.repo = kwargs.get('repo')
         self.token = os.getenv('CIRCLE_CI_TOKEN')
         self.excluded_workflows = kwargs.get('excluded_workflows') or []
+
+    def get_type(self):
+        return Integration.CIRCLECI
 
     async def get_latest(self):
         super().get_latest()

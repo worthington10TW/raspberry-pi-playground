@@ -1,5 +1,6 @@
 import os
 import logging
+from abc import ABC
 from itertools import groupby
 
 from src.ci_gateway.constants import \
@@ -7,12 +8,15 @@ from src.ci_gateway.constants import \
 from aiohttp import ClientSession
 
 
-class GitHubAction(IntegrationAdapter):
+class GitHubAction(IntegrationAdapter, ABC):
     def __init__(self, **kwargs):
         self.username = kwargs.get('username')
         self.repo = kwargs.get('repo')
         self.token = os.getenv('GITHUB_TOKEN')
         self.excluded_workflows = kwargs.get('excluded_workflows') or []
+
+    def get_type(self):
+        return Integration.GITHUB
 
     async def get_latest(self):
         super().get_latest()

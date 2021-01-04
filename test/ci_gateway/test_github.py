@@ -14,6 +14,12 @@ os.environ['GITHUB_TOKEN'] = 'secret'
 
 
 class GithubTests(aiounittest.AsyncTestCase):
+    def test_type(self):
+        self.assertEqual(Integration.GITHUB,
+                         GitHubAction(**{
+                             'username': 'super-man',
+                             'repo': 'awesome'}).get_type())
+
     def test_map_result(self):
         latest = """{
             "id": 448533827,

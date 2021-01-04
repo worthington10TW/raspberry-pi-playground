@@ -8,7 +8,7 @@ from src.gpio.board import Board
 from src.gpio.constants import Lights
 from src.service.aggregator_service import AggregatorService
 from src.service.integration_mapper import IntegrationMapper
-import src.ci_gateway.integrations as available_integrations
+import src.ci_gateway.integration_actions as available_integrations
 
 
 class AsyncMock(MagicMock):

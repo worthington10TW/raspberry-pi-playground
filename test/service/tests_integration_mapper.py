@@ -6,7 +6,7 @@ from unittest import mock
 
 import src.ci_gateway.constants as cons
 from src.service.integration_mapper import IntegrationMapper, MismatchError
-from src.ci_gateway import integrations as available_integrations
+from src.ci_gateway import integration_actions as available_integrations
 
 
 class IntegrationMapperTests(unittest.TestCase):

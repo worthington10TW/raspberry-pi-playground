@@ -12,6 +12,12 @@ os.environ['CIRCLECI_TOKEN'] = 'secret'
 
 
 class CircleCiTests(aiounittest.AsyncTestCase):
+    def test_type(self):
+        self.assertEqual(Integration.CIRCLECI,
+                         CircleCI(**{
+                             'username': 'super-man',
+                             'repo': 'awesome'}).get_type())
+
     def test_map_result(self):
         latest = """{
             "build_num": 1234,

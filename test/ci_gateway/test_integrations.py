@@ -2,7 +2,7 @@
 
 import aiounittest
 
-from src.ci_gateway import integrations
+from src.ci_gateway import integration_actions
 from src.ci_gateway.constants import Integration
 from src.ci_gateway.github import GitHubAction
 from src.ci_gateway.circleci import CircleCI
@@ -10,7 +10,7 @@ from src.ci_gateway.circleci import CircleCI
 
 class IntegrationsTests(aiounittest.AsyncTestCase):
     def test_get_all(self):
-        result = integrations.get_all()
+        result = integration_actions.get_all()
 
         assert GitHubAction is result[Integration.GITHUB]
         assert CircleCI is result[Integration.CIRCLECI]

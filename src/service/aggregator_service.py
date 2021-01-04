@@ -5,7 +5,17 @@ import enum
 import src.ci_gateway.constants as ci_constants
 
 
-def get_status(result: dict):
+class Result(enum.Enum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+    UNKNOWN = "UNKNOWN"
+    NONE = "NONE"
+
+    def __eq__(self, other):
+        return self.value == other.value
+
+
+def get_status(result: dict) -> Result:
     if len(result) == 0:
         return Result.NONE
     elif any(r['status'] == ci_constants.CiResult.FAIL for r in result):
@@ -40,13 +50,3 @@ class AggregatorService(object):
                         lambda x:
                         x['status'] != ci_constants.CiResult.RUNNING,
                         result))))
-
-
-class Result(enum.Enum):
-    PASS = "PASS"
-    FAIL = "FAIL"
-    UNKNOWN = "UNKNOWN"
-    NONE = "NONE"
-
-    def __eq__(self, other):
-        return self.value == other.value
