@@ -5,7 +5,7 @@ from itertools import groupby
 
 from src.ci_gateway.constants import Integration, \
     APIError, IntegrationAdapter, CiResult
-from aiohttp import ClientSession
+from aiohttp import ClientSession, client_exceptions
 
 
 class CircleCI(IntegrationAdapter, ABC):
@@ -37,7 +37,7 @@ class CircleCI(IntegrationAdapter, ABC):
             # content_type = None
             try:
                 json = await resp.json()
-            except:
+            except client_exceptions.ContentTypeError:
                 raise APIError('GET', url, resp.status, resp.text())
 
         response = list(
@@ -68,7 +68,7 @@ class CircleCI(IntegrationAdapter, ABC):
                 sorted(
                     filter(
                         lambda x: x['workflows']['workflow_name']
-                                  not in self.excluded_workflows,
+                        not in self.excluded_workflows,
                         json), key=lambda x: x['workflows']['workflow_name']),
                 lambda x: x['workflows']['workflow_name']):
             jobs.append(list(g)[0])
