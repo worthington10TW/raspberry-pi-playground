@@ -34,7 +34,11 @@ class CircleCI(IntegrationAdapter, ABC):
             if resp.status != 200:
                 raise APIError('GET', url, resp.status)
 
-            json = await resp.json()
+            # content_type = None
+            try:
+                json = await resp.json()
+            except:
+                raise APIError('GET', url, resp.status, resp.text())
 
         response = list(
             map(
@@ -64,7 +68,7 @@ class CircleCI(IntegrationAdapter, ABC):
                 sorted(
                     filter(
                         lambda x: x['workflows']['workflow_name']
-                        not in self.excluded_workflows,
+                                  not in self.excluded_workflows,
                         json), key=lambda x: x['workflows']['workflow_name']),
                 lambda x: x['workflows']['workflow_name']):
             jobs.append(list(g)[0])
