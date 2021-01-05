@@ -38,7 +38,12 @@ class CircleCI(IntegrationAdapter, ABC):
             try:
                 json = await resp.json()
             except client_exceptions.ContentTypeError:
-                raise APIError('GET', url, resp.status, resp.text())
+                raise APIError('GET',
+                               url,
+                               resp.status,
+                               text=resp.text()
+                               if resp.has_body
+                               else "No body returned")
 
         response = list(
             map(
@@ -67,8 +72,9 @@ class CircleCI(IntegrationAdapter, ABC):
         for k, g in groupby(
                 sorted(
                     filter(
-                        lambda x: x['workflows']['workflow_name']
-                        not in self.excluded_workflows,
+                        lambda x:
+                        x['workflows']['workflow_name']not in
+                        self.excluded_workflows,
                         json), key=lambda x: x['workflows']['workflow_name']),
                 lambda x: x['workflows']['workflow_name']):
             jobs.append(list(g)[0])

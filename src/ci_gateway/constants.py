@@ -36,11 +36,11 @@ class CiResult(enum.Enum):
 class APIError(Exception):
     """An API Error Exception"""
 
-    def __init__(self, verb, url, status, text):
+    def __init__(self, verb, url, status, **kwargs):
         self.verb = verb
         self.url = url
         self.status = status
-        self.text = text or ""
+        self.text = kwargs.get("text") or ""
 
     def __str__(self):
-        return f'APIError: {self.verb} {self.url} {self.status} {self.text}'
+        return f'APIError: {self.verb} {self.url} {self.status}{self.text}'
