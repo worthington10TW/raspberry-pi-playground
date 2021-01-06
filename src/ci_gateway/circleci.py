@@ -41,9 +41,7 @@ class CircleCI(IntegrationAdapter, ABC):
                 raise APIError('GET',
                                url,
                                resp.status,
-                               text=resp.text()
-                               if resp.has_body
-                               else "No body returned")
+                               text=await resp.text())
 
         response = list(
             map(
