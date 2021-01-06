@@ -34,9 +34,8 @@ class CircleCI(IntegrationAdapter, ABC):
             if resp.status != 200:
                 raise APIError('GET', url, resp.status)
 
-            # content_type = None
             try:
-                json = await resp.json()
+                json = await resp.json(content_type=None)
             except client_exceptions.ContentTypeError:
                 raise APIError('GET',
                                url,
