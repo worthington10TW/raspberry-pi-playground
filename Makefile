@@ -1,8 +1,7 @@
 setup:
 	PYTHONPATH=$PYTHONPATH:..
 	pipenv --python 3
-	pipenv install
-	python -m pip install flake8
+	pipenv install -d
 
 init:
 	python3 -m flake8 monitor
