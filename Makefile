@@ -20,3 +20,7 @@ debug: init
 .PHONY: run
 run: init
 	python3 -O src/app.py -log info &
+
+.PHONY: publish
+publish: init
+	python3 setup.py sdist

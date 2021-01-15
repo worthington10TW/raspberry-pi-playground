@@ -7,9 +7,9 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='src',
+    name='pi-build-monitor',
     version='0.1.0',
-    description='Raspberry zero toy, maybe a build centre or something cool',
+    description='Build monitor GPIO',
     long_description=readme,
     author='Matthew Z Worthington',
     author_email='worthingtown@gmail.com',
