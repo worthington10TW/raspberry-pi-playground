@@ -4,19 +4,21 @@ verify_ssl = true
 name = 'pypi'
 
 [requires]
-python_version = '3'
+python_version = '3.8'
 
 [packages]
-Mock = {GPIO = '*'}
 requests='*'
 aiohttp='*'
 aioresponses='*'
-"mock.gpio" = "*"
+"Mock.GPIO"='*'
+Mock='*'
+asyncio='*'
+pipenv-setup = "*"
 
 [dev-packages]
 pytest='*'
 flake8='*'
 setuptools='*'
-aiounittest='*'
-lint = "*"
+lint="*"
 pipenv-setup = "*"
+aiounittest = "*"
