@@ -7,13 +7,16 @@ name = 'pypi'
 python_version = '3'
 
 [packages]
-Mock.GPIO='*'
+Mock = {GPIO = '*'}
 requests='*'
 aiohttp='*'
 aioresponses='*'
+"mock.gpio" = "*"
 
 [dev-packages]
 pytest='*'
 flake8='*'
 setuptools='*'
 aiounittest='*'
+lint = "*"
+pipenv-setup = "*"

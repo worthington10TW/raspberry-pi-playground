@@ -4,12 +4,12 @@ setup:
 	pipenv install -d
 
 init:
-	python3 -m flake8 monitor
-	python3 -m flake8 test
+	pipenv run flake8 monitor
+	pipenv run flake8 test
 
 .PHONY: test
 test: init
-	python3 -m pytest --pyargs test -v
+	pipenv run pytest --pyargs test -v
 
 .PHONY: debug
 debug: init
@@ -21,6 +21,7 @@ run: init
 
 .PHONY: publish
 publish: init
+	pipenv run pipenv-setup sync
 	python3 setup.py sdist bdist_wheel
 
 .PHONY: install-monitor
