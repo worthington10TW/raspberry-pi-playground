@@ -1,11 +1,11 @@
-init:
-	python3 -m flake8 monitor
-	python3 -m flake8 test
-
 setup:
 	PYTHONPATH=$PYTHONPATH:..
 	pipenv --python 3
 	pipenv install
+
+init:
+	python3 -m flake8 monitor
+	python3 -m flake8 test
 
 .PHONY: test
 test: init
