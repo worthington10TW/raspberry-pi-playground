@@ -15,7 +15,7 @@ Get yourself a raspberry pi, some LEDs and clone this repo!
 
 ## Setup
 
-Setup is stored within `src/integrations.conf`
+Setup is stored within `src/integrations.json`
 
 ```json
 {

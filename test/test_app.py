@@ -3,12 +3,12 @@ from unittest import mock
 from unittest.mock import MagicMock, call
 import aiounittest
 from aioresponses import aioresponses
-from src.build_monitor import BuildMonitor
-from src.gpio.board import Board
-from src.gpio.constants import Lights
-from src.service.aggregator_service import AggregatorService
-from src.service.integration_mapper import IntegrationMapper
-import src.ci_gateway.integration_actions as available_integrations
+from monitor.build_monitor import BuildMonitor
+from monitor.gpio.board import Board
+from monitor.gpio.constants import Lights
+from monitor.service.aggregator_service import AggregatorService
+from monitor.service.integration_mapper import IntegrationMapper
+import monitor.ci_gateway.integration_actions as available_integrations
 
 
 class AsyncMock(MagicMock):

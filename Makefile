@@ -1,26 +1,29 @@
 init:
-	PYTHONPATH=$PYTHONPATH:..
-	pip3 install -r requirements.txt
-	pip3 install -e .
-	python3 -m flake8 src
+	python3 -m flake8 monitor
 	python3 -m flake8 test
+
+setup:
+	PYTHONPATH=$PYTHONPATH:..
+	pipenv --python 3
+	pipenv install
 
 .PHONY: test
 test: init
 	python3 -m pytest --pyargs test -v
 
-.PHONY: install
-install: init
-	pip3 install -e .
-
 .PHONY: debug
 debug: init
-	python3 src/app.py -log debug
+	python3 monitor/app.py -log debug
 
 .PHONY: run
 run: init
-	python3 -O src/app.py -log info &
+	python3 -O monitor/app.py -log info &
 
 .PHONY: publish
 publish: init
-	python3 setup.py sdist
+	python3 setup.py sdist bdist_wheel
+
+.PHONY: install-monitor
+install-monitor:
+	python3 -m pip install monitor-0.1.0-py3-none-any.whl --force-reinstall
+

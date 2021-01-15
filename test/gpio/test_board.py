@@ -3,8 +3,8 @@
 from unittest import mock
 import aiounittest
 import asyncio
-from src.gpio.board import Board
-from src.gpio.constants import Lights
+from monitor.gpio.board import Board
+from monitor.gpio.constants import Lights
 
 
 class BoardTests(aiounittest.AsyncTestCase):

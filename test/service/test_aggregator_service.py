@@ -2,8 +2,8 @@
 
 import aiounittest
 
-from src.service.aggregator_service import Result, AggregatorService
-import src.ci_gateway.constants as github_constants
+from monitor.service.aggregator_service import Result, AggregatorService
+import monitor.ci_gateway.constants as github_constants
 
 
 async def return_pass():

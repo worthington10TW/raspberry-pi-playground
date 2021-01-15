@@ -2,10 +2,10 @@
 
 import aiounittest
 
-from src.ci_gateway import integration_actions
-from src.ci_gateway.constants import Integration
-from src.ci_gateway.github import GitHubAction
-from src.ci_gateway.circleci import CircleCI
+from monitor.ci_gateway import integration_actions
+from monitor.ci_gateway.constants import Integration
+from monitor.ci_gateway.github import GitHubAction
+from monitor.ci_gateway.circleci import CircleCI
 
 
 class IntegrationsTests(aiounittest.AsyncTestCase):

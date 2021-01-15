@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from src.ci_gateway.constants import Integration
+from monitor.ci_gateway.constants import Integration
 
 
 class IntegrationMapper(object):

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 
-from src.ci_gateway.circleci import CircleCI
-from src.ci_gateway.github import GitHubAction
-from src.ci_gateway.constants import Integration
+from monitor.ci_gateway.circleci import CircleCI
+from monitor.ci_gateway.github import GitHubAction
+from monitor.ci_gateway.constants import Integration
 
 
 def get_all():

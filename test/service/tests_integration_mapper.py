@@ -4,9 +4,9 @@ import unittest
 import pytest
 from unittest import mock
 
-import src.ci_gateway.constants as cons
-from src.service.integration_mapper import IntegrationMapper, MismatchError
-from src.ci_gateway import integration_actions as available_integrations
+import monitor.ci_gateway.constants as cons
+from monitor.service.integration_mapper import IntegrationMapper, MismatchError
+from monitor.ci_gateway import integration_actions as available_integrations
 
 
 class IntegrationMapperTests(unittest.TestCase):
@@ -32,8 +32,8 @@ class IntegrationMapperTests(unittest.TestCase):
         [self.assertEqual(cons.Integration.GITHUB, r['type']) for r in result]
         [self.assertIsNotNone(r['action']) for r in result]
 
-    @mock.patch('src.ci_gateway.github.CircleCI')
-    @mock.patch('src.ci_gateway.github.GitHubAction')
+    @mock.patch('monitor.ci_gateway.github.CircleCI')
+    @mock.patch('monitor.ci_gateway.github.GitHubAction')
     def test_executes_correct_function(self,
                                        mocked_git_action,
                                        mocked_circle_ci):

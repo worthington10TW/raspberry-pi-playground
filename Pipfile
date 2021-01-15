@@ -1,0 +1,19 @@
+[[source]]
+url = 'https://pypi.python.org/simple'
+verify_ssl = true
+name = 'pypi'
+
+[requires]
+python_version = '3.8'
+
+[packages]
+Mock.GPIO='*'
+requests='*'
+aiohttp='*'
+aioresponses='*'
+
+[dev-packages]
+pytest='*'
+flake8='*'
+setuptools='*'
+aiounittest='*'

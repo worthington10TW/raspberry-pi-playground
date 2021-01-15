@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import logging
-from src.gpio.constants import Lights
-from src.service.aggregator_service import AggregatorService, Result
+from monitor.gpio.constants import Lights
+from monitor.service.aggregator_service import AggregatorService, Result
 
 
 class BuildMonitor(object):

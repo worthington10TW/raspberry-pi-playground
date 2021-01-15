@@ -2,9 +2,9 @@
 from unittest.mock import MagicMock, call
 import aiounittest
 
-from src.build_monitor import BuildMonitor
-from src.gpio.constants import Lights
-from src.service.aggregator_service import Result
+from monitor.build_monitor import BuildMonitor
+from monitor.gpio.constants import Lights
+from monitor.service.aggregator_service import Result
 
 
 class AsyncMock(MagicMock):

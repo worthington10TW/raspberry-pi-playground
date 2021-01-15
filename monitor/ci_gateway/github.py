@@ -3,77 +3,70 @@ import logging
 from abc import ABC
 from itertools import groupby
 
-from src.ci_gateway.constants import Integration, \
-    APIError, IntegrationAdapter, CiResult
-from aiohttp import ClientSession, client_exceptions
+from monitor.ci_gateway.constants import \
+    Integration, CiResult, APIError, IntegrationAdapter
+from aiohttp import ClientSession
 
 
-class CircleCI(IntegrationAdapter, ABC):
+class GitHubAction(IntegrationAdapter, ABC):
     def __init__(self, **kwargs):
         self.username = kwargs.get('username')
         self.repo = kwargs.get('repo')
-        self.token = os.getenv('CIRCLE_CI_TOKEN')
+        self.token = os.getenv('GITHUB_TOKEN')
         self.excluded_workflows = kwargs.get('excluded_workflows') or []
 
     def get_type(self):
-        return Integration.CIRCLECI
+        return Integration.GITHUB
 
     async def get_latest(self):
         super().get_latest()
-        base = 'https://circleci.com/api/v1.1'
-        url = f'{base}/project/github/{self.username}/{self.repo}?shallow=true'  # noqa: E501
+        base = 'https://api.github.com'
+        url = f'{base}/repos/{self.username}/{self.repo}/actions/runs'
+
         logging.debug(f'Calling {url}')
 
         async with ClientSession() as session:
             resp = await session.get(
                 url,
-                headers={'Circle-Token': f'{self.token}',
-                         'Accept': 'application/json',
-                         'Content-Type': 'application/json'})
+                headers={'Authorization': f'token {self.token}'})
 
             if resp.status != 200:
                 raise APIError('GET', url, resp.status)
 
-            try:
-                json = await resp.json(content_type=None)
-            except client_exceptions.ContentTypeError:
-                raise APIError('GET',
-                               url,
-                               resp.status,
-                               text=await resp.text())
+            json = await resp.json()
 
         response = list(
             map(
-                CircleCI.map_result,
-                self.get_unique_latest_jobs(json)))
+                GitHubAction.map_result,
+                self.get_unique_latest_jobs(json['workflow_runs'])))
         logging.info(f'Called {url}')
         logging.info(f'Response {response}')
         return response
 
     @staticmethod
     def map_result(latest):
-        outcome = latest["outcome"]
-        lifecycle = latest["lifecycle"]
+        conclusion = latest["conclusion"]
+        status = latest["status"]
         return dict(
-            type=Integration.CIRCLECI,
-            vcs=latest["vcs_url"],
-            id=latest["build_num"],
-            name=latest['workflows']['workflow_name'],
-            start=latest["start_time"],
-            status=CiResult.RUNNING if lifecycle != "finished" else
-            CiResult.FAIL if outcome != "success" else  # noqa: E501
-            CiResult.PASS)
+            type=Integration.GITHUB,
+            vcs=latest["html_url"],
+            id=latest["id"],
+            name=latest["name"],
+            start=latest["created_at"],
+            status=CiResult.FAIL if status == "completed" and conclusion == "failure" else  # noqa: E501
+            CiResult.PASS if status == "completed" and conclusion == "success" else  # noqa: E501
+            CiResult.RUNNING if conclusion is None and (status == "queued" or status == "in_progress") else  # noqa: E501
+            CiResult.UNKNOWN)
 
     def get_unique_latest_jobs(self, json):
         jobs = []
         for k, g in groupby(
                 sorted(
                     filter(
-                        lambda x:
-                        x['workflows']['workflow_name']not in
-                        self.excluded_workflows,
-                        json), key=lambda x: x['workflows']['workflow_name']),
-                lambda x: x['workflows']['workflow_name']):
+                        lambda x: x['name']
+                        not in self.excluded_workflows,
+                        json), key=lambda x: x['name']),
+                lambda x: x['name']):
             jobs.append(list(g)[0])
 
         return jobs
@@ -88,7 +81,6 @@ if __name__ == "__main__":
 
     parser.add_argument('--username', help='repo username')
     parser.add_argument('--repo', help='repo to query')
-    parser.add_argument('--excluded_workflows', help='excluded workflows')
 
     args = parser.parse_args()
 
@@ -98,9 +90,8 @@ if __name__ == "__main__":
     logger.addHandler(screen_handler)
 
     loop = asyncio.get_event_loop()
-
     args.excluded_workflows = args.excluded_workflows or []
-    task = CircleCI(
+    task = GitHubAction(
         **{
             'username': args.username,
             'repo': args.repo,

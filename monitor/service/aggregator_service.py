@@ -2,7 +2,7 @@
 
 import asyncio
 import enum
-import src.ci_gateway.constants as ci_constants
+import monitor.ci_gateway.constants as ci_constants
 
 
 class Result(enum.Enum):
