@@ -134,3 +134,5 @@ dmypy.json
 logs/
 .DS_Store
 raspberry_pi_playground-*.whl
+
+Pipfile.lock
