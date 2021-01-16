@@ -2,6 +2,7 @@ setup:
 	PYTHONPATH=$PYTHONPATH:..
 	pipenv --python 3
 	pipenv install -d
+	pipenv run pipenv-setup sync
 
 init:
 	pipenv run flake8 monitor
@@ -21,7 +22,6 @@ publish: init
 	rm -rf build/
 	rm -rf dist/
 	rm -rf monitor.egg-info/
-	pipenv run pipenv-setup sync
 	pipenv run python3 setup.py sdist bdist_wheel
 
 .PHONY: install-monitor
