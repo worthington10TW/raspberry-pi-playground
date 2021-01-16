@@ -13,11 +13,8 @@ test: init
 
 .PHONY: debug
 debug: init
-	pipenv run python3 monitor/app.py -log debug
+	pipenv run python3 monitor -log debug -conf monitor/integrations.json
 
-.PHONY: run
-run: init
-	pipenv run python3 -O monitor/app.py -log info &
 
 .PHONY: publish
 publish: init

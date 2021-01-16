@@ -6,6 +6,14 @@ Do you want to decouple your build monitor from your machine?
 
 Get yourself a raspberry pi, some LEDs and clone this repo!
 
+## To run
+
+- Setup `make setup`
+- Test `make test`
+- Debug `make debug`
+- Publish `make publish`
+- Install `make install-monitor`
+
 ## Signals
 
 - Blue light: Fetching data
@@ -15,7 +23,9 @@ Get yourself a raspberry pi, some LEDs and clone this repo!
 
 ## Setup
 
-Setup is stored within `src/integrations.json`
+Example setup can be found here: `src/integrations.json`
+
+Config is passed using the `-conf` argument variable
 
 ```json
 {

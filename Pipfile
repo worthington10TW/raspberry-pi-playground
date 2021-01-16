@@ -12,6 +12,7 @@ aiohttp='*'
 aioresponses='*'
 asyncio='*'
 pipenv-setup = "*"
+monitor = {path = "."}
 
 [dev-packages]
 pytest='*'
