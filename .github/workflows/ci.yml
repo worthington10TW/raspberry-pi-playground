@@ -47,8 +47,9 @@ jobs:
 
     - name: Publish Test Report
       if: always()
-      uses: ashley-taylor/junit-report-annotations-action@1.3
+      uses: mikepenz/action-junit-report@v1
       with:
-        access-token: ${{ secrets.GITHUB_TOKEN }}
+        report_paths: '**/junit/test-results.xml'
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 
 
