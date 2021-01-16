@@ -9,7 +9,7 @@ init:
 
 .PHONY: test
 test: init
-	pipenv run pytest --pyargs test -v
+	pipenv run pytest --pyargs test/monitor -v
 
 .PHONY: debug
 debug: init
