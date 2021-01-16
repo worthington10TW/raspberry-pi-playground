@@ -59,7 +59,9 @@ setup(
     url="https://github.com/worthington10TW/raspberry-pi-playground",
     include_package_data=True,
     license=license,
-    packages=find_packages(include=("monitor", "monitor.*")),
-    entry_points={"console_scripts": ["monitor=monitor.app:main"],},
-    package_data={"": ["monitor/integrations.json"]},
+    packages=find_packages(
+        include=("monitor", "monitor.*"), exclude=("test", "text.*")
+    ),
+    entry_points={"console_scripts": ["monitor=monitor.app:main"]},
+    package_data={"integrations.json": ["monitor/integrations.json"]},
 )

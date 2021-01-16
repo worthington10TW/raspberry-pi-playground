@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 if __debug__:
-    from Mock import GPIO
+    from monitor.gpio.Mock import GPIO
 else:
     from RPi import GPIO
 

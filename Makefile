@@ -13,16 +13,19 @@ test: init
 
 .PHONY: debug
 debug: init
-	python3 monitor/app.py -log debug
+	pipenv run python3 monitor/app.py -log debug
 
 .PHONY: run
 run: init
-	python3 -O monitor/app.py -log info &
+	pipenv run python3 -O monitor/app.py -log info &
 
 .PHONY: publish
 publish: init
+	rm -rf build/
+	rm -rf dist/
+	rm -rf monitor.egg-info/
 	pipenv run pipenv-setup sync
-	python3 setup.py sdist bdist_wheel
+	pipenv run python3 setup.py sdist bdist_wheel
 
 .PHONY: install-monitor
 install-monitor:
