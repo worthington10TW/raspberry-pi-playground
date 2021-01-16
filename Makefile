@@ -29,5 +29,5 @@ publish: init
 
 .PHONY: install-monitor
 install-monitor:
-	python3 -m pip install monitor-0.1.0-py3-none-any.whl --force-reinstall
+	python3 -m pip install dist/monitor-0.1.1-py3-none-any.whl --force-reinstall
 

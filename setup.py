@@ -7,6 +7,20 @@ with open("LICENSE") as f:
     license = f.read()
 
 setup(
+    name="monitor",
+    version="0.1.1",
+    description="Build monitor GPIO",
+    long_description=readme,
+    author="Matthew Z Worthington",
+    author_email="worthingtown@gmail.com",
+    url="https://github.com/worthington10TW/gpio-build-monitor",
+    include_package_data=True,
+    license=license,
+    packages=find_packages(
+        include=("monitor", "monitor.*"), exclude=("test", "text.*")
+    ),
+    entry_points={"console_scripts": ["monitor=monitor.app:main"]},
+    package_data={"integrations.json": ["monitor/integrations.json"]},
     install_requires=[
         "aiohttp==3.7.3",
         "aioresponses==0.7.1",
@@ -23,8 +37,6 @@ setup(
         "colorama==0.4.4; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
         "distlib==0.3.1",
         "idna==2.10; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
-        "mock==4.0.3",
-        "mock.gpio==0.1.7",
         "multidict==5.1.0; python_version >= '3.6'",
         "orderedmultidict==1.0.1",
         "packaging==20.8; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
@@ -36,7 +48,6 @@ setup(
         "plette[validation]==0.2.3; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'",
         "pyparsing==2.4.7; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'",
         "python-dateutil==2.8.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
-        "pyyaml==5.3.1",
         "regex==2020.11.13",
         "requests==2.25.1",
         "requirementslib==1.5.16; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
@@ -50,18 +61,4 @@ setup(
         "wheel==0.36.2; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
         "yarl==1.6.3; python_version >= '3.6'",
     ],
-    name="monitor",
-    version="0.1.0",
-    description="Build monitor GPIO",
-    long_description=readme,
-    author="Matthew Z Worthington",
-    author_email="worthingtown@gmail.com",
-    url="https://github.com/worthington10TW/raspberry-pi-playground",
-    include_package_data=True,
-    license=license,
-    packages=find_packages(
-        include=("monitor", "monitor.*"), exclude=("test", "text.*")
-    ),
-    entry_points={"console_scripts": ["monitor=monitor.app:main"]},
-    package_data={"integrations.json": ["monitor/integrations.json"]},
 )

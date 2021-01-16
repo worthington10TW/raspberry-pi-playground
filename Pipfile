@@ -10,8 +10,6 @@ python_version = '3.8'
 requests='*'
 aiohttp='*'
 aioresponses='*'
-"Mock.GPIO"='*'
-Mock='*'
 asyncio='*'
 pipenv-setup = "*"
 

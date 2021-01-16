@@ -36,8 +36,8 @@ async def main(conf_file, level):
 
 
 def get_config(conf_file):
-    response_json = os.path.join(
-        os.path.dirname(__file__),
-        conf_file)
+    path = os.path.join(
+        os.getcwd(), conf_file)
+    response_json = path
     with open(response_json) as integrations:
         return json.load(integrations)
