@@ -21,3 +21,4 @@ setuptools='*'
 lint="*"
 pipenv-setup = "*"
 aiounittest = "*"
+pytest-cov = "*"

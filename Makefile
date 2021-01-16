@@ -10,7 +10,8 @@ init:
 
 .PHONY: test
 test: init
-	pipenv run pytest --pyargs test/monitor -v
+	pipenv run pytest test/monitor -v --junitxml=junit/test-results.xml
+	#pipenv run pytest --pyargs test/monitor -v --junitxml
 
 .PHONY: debug
 debug: init

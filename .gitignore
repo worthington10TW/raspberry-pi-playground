@@ -136,3 +136,4 @@ logs/
 raspberry_pi_playground-*.whl
 
 Pipfile.lock
+/junit/test-results.xml
