@@ -10,4 +10,5 @@ fileignoreconfig:
 - filename: Pipfile.lock
   checksum: 5c078f1c4391d5f266c568309a68972ad86d47ae113356d7ece50611d2da93a0
 - filename: .github/workflows/ci.yml
-  checksum: 898c5e918f898202fdcf4250e878c9ac4b9d203941c3433b5c77d62b3867ffdc
+  checksum: bd0926ac704e3c37fd55efae129f6134740a48054a6ea5d288fc6b7d86edf20e
+
