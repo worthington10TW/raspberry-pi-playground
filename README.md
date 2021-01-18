@@ -14,6 +14,16 @@ Get yourself a raspberry pi, some LEDs and clone this repo!
 - Publish `make publish`
 - Install `make install-monitor`
 
+## Install
+
+To install directly from github:
+
+### Latest
+
+`pip3 install git+https://github.com/worthington10TW/raspberry-pi-playground#egg=monitor`
+
+### Release
+
 ## Signals
 
 - Blue light: Fetching data
